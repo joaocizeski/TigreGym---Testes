@@ -11,16 +11,19 @@ import { useSelector } from "react-redux";
 export default function SistemaLayout({children}: {children: React.ReactNode;}) {
 
   const usuario = useSelector((state: RootState) => state.auth.usuario);
-
   const router = useRouter();
 
   useEffect(() => {
 
     if (usuario == null) {
-      router.push("/login");
+      router.replace("/login");
     }
 
-  },);
+  }, [usuario, router]);
+
+  if (usuario == null) {
+    return null;
+  }
 
   return (
     <div className="flex">
