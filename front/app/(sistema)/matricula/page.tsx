@@ -1,7 +1,7 @@
 "use client";
 
 import { atualizarStatusMatricula, buscarListaMatriculas, deletarMatricula } from "@/app/services/matriculaService";
-import Link from "@/node_modules/next/link";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Matricula } from "../../types/matricula";
 
