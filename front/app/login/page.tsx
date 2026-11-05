@@ -1,42 +1,40 @@
 'use client';
 
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";
 import { loginBack } from "../services/authService";
 import { buscarUsuarioLogado } from "../services/usuarioService";
-import { login } from "../redux/slices/authSlice";
-
+import { login, logout, setToken } from "../redux/slices/authSlice";
 
 export default function Login(){
   const router = useRouter();
-  const dispatch =useDispatch();
-
+  const dispatch = useDispatch();
 
   const handleLogin = async(formData:FormData) =>{
       try {
-          debugger;
           const emailTela = formData.get("email")?.toString() ?? "";
           const senhaTela = formData.get("senha")?.toString() ?? "";
 
           var loginResposta = await loginBack(emailTela,senhaTela);
 
           if(loginResposta != null){
-              Cookies.set('token',loginResposta.token,{secure: true, expires: 7});
-        
+              dispatch(setToken(loginResposta.token));
+
               var usuarioLogado = await buscarUsuarioLogado();
 
-             dispatch(login(
+              dispatch(login(
               {
                   token:loginResposta.token,
                   usuario:{...usuarioLogado}
               }
               ));
+
               router.push("/home")
           }else{
               alert("Login ou senha Invalido!")
           }
       } catch (error) {
+          dispatch(logout());
           alert("Login ou senha Invalido!")
       }
   }

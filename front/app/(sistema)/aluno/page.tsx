@@ -2,12 +2,15 @@
 
 import { atualizarStatusAluno, buscarListaAlunos, deletarAluno } from "@/app/services/alunoService";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+import { setAlunos } from "../../redux/slices/alunosSlice";
 import { Aluno } from "../../types/aluno";
 
 export default function Alunos() {
-  // Guarda a lista de alunos que será mostrada na tela
-  const [alunos, setAlunos] = useState<Aluno[]>([]);
+  const alunos = useSelector((state: RootState) => state.alunos.lista);
+  const dispatch = useDispatch();
 
   // Quando a página abrir, carrega os dados cadastrados
   useEffect(() => {
@@ -19,8 +22,8 @@ export default function Alunos() {
     try {
       const dados = await buscarListaAlunos();
 
-      // Guarda os alunos recebidos para atualizar a tela
-      setAlunos(dados);
+      // Guarda a lista de alunos no Redux
+      dispatch(setAlunos(dados));
     } catch (error) {
       console.log(error);
       alert("Erro ao carregar dados!");
