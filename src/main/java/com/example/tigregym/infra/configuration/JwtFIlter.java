@@ -28,13 +28,11 @@ public class JwtFIlter extends OncePerRequestFilter {
 
         String uri = request.getRequestURI();
 
-        // Libera o preflight do navegador
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        // Rotas que não precisam de token
         if (uri.startsWith("/swagger-ui")
                 || uri.startsWith("/v2/api-docs")
                 || uri.startsWith("/v3/api-docs")
@@ -50,32 +48,27 @@ public class JwtFIlter extends OncePerRequestFilter {
 
         String authHeader = request.getHeader("Authorization");
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().println("Token não informado");
-            return;
-        }
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
-        String token = authHeader.substring(7);
+            String token = authHeader.substring(7);
 
-        try {
+            try {
+                var usuarioLogado = tokenService.verificarToken(token);
 
-            // Valida assinatura, expiração e existência do token no banco
-            var usuarioLogado = tokenService.verificarToken(token);
+                var autenticacao = new UsernamePasswordAuthenticationToken(
+                        usuarioLogado,
+                        null,
+                        usuarioLogado.authorities()
+                );
 
-            var autenticacao = new UsernamePasswordAuthenticationToken(
-                    usuarioLogado,
-                    null,
-                    usuarioLogado.authorities()
-            );
+                SecurityContextHolder.getContext().setAuthentication(autenticacao);
 
-            SecurityContextHolder.getContext().setAuthentication(autenticacao);
-
-        } catch (Exception e) {
-            SecurityContextHolder.clearContext();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().println("Token inválido");
-            return;
+            } catch (Exception e) {
+                SecurityContextHolder.clearContext();
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.getWriter().println("Token inválido");
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);
