@@ -1,7 +1,7 @@
 "use client";
 
 import { atualizarStatusPlano, buscarListaPlanos, deletarPlano } from "@/app/services/planoService";
-import Link from "@/node_modules/next/link";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Plano } from "../../types/plano";
 
