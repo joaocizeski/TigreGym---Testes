@@ -29,6 +29,14 @@ public class AlunoService implements AlunoServicePort {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
+        if (empresa == null) {
+            return alunoRepository.findByStatusNot(EnumStatusAluno.EXCLUIDO)
+                    .orElse(List.of())
+                    .stream()
+                    .map(AlunoResponse::new)
+                    .toList();
+        }
+
         return alunoRepository
                 .findByEmpresa_IdAndStatusNot(
                         empresa.getId(),
@@ -51,20 +59,29 @@ public class AlunoService implements AlunoServicePort {
             alunoBanco.setDataNascimento(aluno.dataNascimento());
             alunoBanco.setTelefone(new Telefone(aluno.telefone()));
             alunoBanco.setEmail(new Email(aluno.email()));
-            alunoBanco.setEmpresa(empresa);
+
+            if (empresa != null) {
+                alunoBanco.setEmpresa(empresa);
+            }
 
             alunoRepository.save(alunoBanco);
 
             return new AlunoResponse(alunoBanco);
         }
 
-        Aluno alunoBanco = alunoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
-                        id,
-                        empresa.getId(),
-                        EnumStatusAluno.EXCLUIDO
-                )
-                .orElse(null);
+        Aluno alunoBanco;
+
+        if (empresa == null) {
+            alunoBanco = alunoRepository.findById(id).orElse(null);
+        } else {
+            alunoBanco = alunoRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            id,
+                            empresa.getId(),
+                            EnumStatusAluno.EXCLUIDO
+                    )
+                    .orElse(null);
+        }
 
         if (alunoBanco != null) {
             alunoBanco.setNome(aluno.nome());
@@ -85,14 +102,19 @@ public class AlunoService implements AlunoServicePort {
     public AlunoResponse buscarPorId(Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        Aluno aluno;
 
-        Aluno aluno = alunoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
-                        id,
-                        empresa.getId(),
-                        EnumStatusAluno.EXCLUIDO
-                )
-                .orElse(null);
+        if (empresa == null) {
+            aluno = alunoRepository.findById(id).orElse(null);
+        } else {
+            aluno = alunoRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            id,
+                            empresa.getId(),
+                            EnumStatusAluno.EXCLUIDO
+                    )
+                    .orElse(null);
+        }
 
         if (aluno == null) {
             return null;
@@ -105,14 +127,19 @@ public class AlunoService implements AlunoServicePort {
     public boolean atualizarStatus(EnumStatusAluno status, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        Aluno alunoBanco;
 
-        Aluno alunoBanco = alunoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
-                        id,
-                        empresa.getId(),
-                        EnumStatusAluno.EXCLUIDO
-                )
-                .orElse(null);
+        if (empresa == null) {
+            alunoBanco = alunoRepository.findById(id).orElse(null);
+        } else {
+            alunoBanco = alunoRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            id,
+                            empresa.getId(),
+                            EnumStatusAluno.EXCLUIDO
+                    )
+                    .orElse(null);
+        }
 
         if (alunoBanco != null) {
             alunoBanco.setStatus(status);

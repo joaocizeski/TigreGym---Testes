@@ -26,6 +26,14 @@ public class PlanoService implements PlanoServicePort {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
+        if (empresa == null) {
+            return planoRepository.findByStatusNot(EnumStatusPlano.EXCLUIDO)
+                    .orElse(List.of())
+                    .stream()
+                    .map(PlanoResponse::new)
+                    .toList();
+        }
+
         return planoRepository
                 .findByEmpresa_IdAndStatusNot(
                         empresa.getId(),
@@ -47,20 +55,29 @@ public class PlanoService implements PlanoServicePort {
             planoBanco.setDescricao(plano.descricao());
             planoBanco.setValor(plano.valor());
             planoBanco.setDuracaoEmMeses(plano.duracaoEmMeses());
-            planoBanco.setEmpresa(empresa);
+
+            if (empresa != null) {
+                planoBanco.setEmpresa(empresa);
+            }
 
             planoRepository.save(planoBanco);
 
             return new PlanoResponse(planoBanco);
         }
 
-        Plano planoBanco = planoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
-                        id,
-                        empresa.getId(),
-                        EnumStatusPlano.EXCLUIDO
-                )
-                .orElse(null);
+        Plano planoBanco;
+
+        if (empresa == null) {
+            planoBanco = planoRepository.findById(id).orElse(null);
+        } else {
+            planoBanco = planoRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            id,
+                            empresa.getId(),
+                            EnumStatusPlano.EXCLUIDO
+                    )
+                    .orElse(null);
+        }
 
         if (planoBanco != null) {
             planoBanco.setNome(plano.nome());
@@ -80,14 +97,19 @@ public class PlanoService implements PlanoServicePort {
     public PlanoResponse buscarPorId(Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        Plano plano;
 
-        Plano plano = planoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
-                        id,
-                        empresa.getId(),
-                        EnumStatusPlano.EXCLUIDO
-                )
-                .orElse(null);
+        if (empresa == null) {
+            plano = planoRepository.findById(id).orElse(null);
+        } else {
+            plano = planoRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            id,
+                            empresa.getId(),
+                            EnumStatusPlano.EXCLUIDO
+                    )
+                    .orElse(null);
+        }
 
         if (plano == null) {
             return null;
@@ -100,14 +122,19 @@ public class PlanoService implements PlanoServicePort {
     public boolean atualizarStatus(EnumStatusPlano status, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        Plano planoBanco;
 
-        Plano planoBanco = planoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
-                        id,
-                        empresa.getId(),
-                        EnumStatusPlano.EXCLUIDO
-                )
-                .orElse(null);
+        if (empresa == null) {
+            planoBanco = planoRepository.findById(id).orElse(null);
+        } else {
+            planoBanco = planoRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            id,
+                            empresa.getId(),
+                            EnumStatusPlano.EXCLUIDO
+                    )
+                    .orElse(null);
+        }
 
         if (planoBanco != null) {
             planoBanco.setStatus(status);
