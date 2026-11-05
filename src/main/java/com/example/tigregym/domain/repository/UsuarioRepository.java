@@ -24,4 +24,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     Optional<Usuario> findByEmailAndCpf(Email email, CPF cpf);
 
     List<Usuario> getUsuariosByEmpresa_Id(Long empresa);
+
+    List<Usuario> findByEmpresa_IdAndStatusNot(Long empresaId, EnumStatusUsuario status);
+
+    Optional<Usuario> findByIdAndEmpresa_IdAndStatusNot(
+            Long id,
+            Long empresaId,
+            EnumStatusUsuario status
+    );
 }

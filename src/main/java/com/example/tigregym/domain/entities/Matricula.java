@@ -1,6 +1,7 @@
 package com.example.tigregym.domain.entities;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -32,6 +33,10 @@ public class Matricula {
     @ManyToOne
     @JoinColumn(name = "plano_id", referencedColumnName = "id")
     public Plano plano;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "empresa_id", referencedColumnName = "id")
+    private Empresa empresa;
 
     public LocalDateTime dataInicio;
 

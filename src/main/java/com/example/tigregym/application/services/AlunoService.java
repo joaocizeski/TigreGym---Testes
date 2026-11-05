@@ -2,7 +2,9 @@ package com.example.tigregym.application.services;
 
 import com.example.tigregym.application.DTOs.AlunoRequest;
 import com.example.tigregym.application.DTOs.AlunoResponse;
+import com.example.tigregym.application.ports.AlunoServicePort;
 import com.example.tigregym.domain.entities.Aluno;
+import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusAluno;
 import com.example.tigregym.domain.repository.AlunoRepository;
 import com.example.tigregym.domain.valueobject.CPF;
@@ -14,19 +16,33 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AlunoService {
+public class AlunoService implements AlunoServicePort {
 
     @Autowired
     private AlunoRepository alunoRepository;
 
+    @Autowired
+    private UsuarioService usuarioService;
+
+    @Override
     public List<AlunoResponse> listarTodosAlunoTable() {
-        return alunoRepository.findAll()
+
+        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+
+        return alunoRepository
+                .findByEmpresa_IdAndStatusNot(
+                        empresa.getId(),
+                        EnumStatusAluno.EXCLUIDO
+                )
                 .stream()
                 .map(AlunoResponse::new)
                 .toList();
     }
 
+    @Override
     public AlunoResponse salvarAluno(AlunoRequest aluno, Long id) {
+
+        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
         if (id == 0L) {
             Aluno alunoBanco = new Aluno();
@@ -35,13 +51,20 @@ public class AlunoService {
             alunoBanco.setDataNascimento(aluno.dataNascimento());
             alunoBanco.setTelefone(new Telefone(aluno.telefone()));
             alunoBanco.setEmail(new Email(aluno.email()));
+            alunoBanco.setEmpresa(empresa);
 
             alunoRepository.save(alunoBanco);
 
             return new AlunoResponse(alunoBanco);
         }
 
-        Aluno alunoBanco = alunoRepository.findById(id).orElse(null);
+        Aluno alunoBanco = alunoRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusAluno.EXCLUIDO
+                )
+                .orElse(null);
 
         if (alunoBanco != null) {
             alunoBanco.setNome(aluno.nome());
@@ -58,9 +81,18 @@ public class AlunoService {
         return null;
     }
 
+    @Override
     public AlunoResponse buscarPorId(Long id) {
 
-        Aluno aluno = alunoRepository.findById(id).orElse(null);
+        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+
+        Aluno aluno = alunoRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusAluno.EXCLUIDO
+                )
+                .orElse(null);
 
         if (aluno == null) {
             return null;
@@ -69,9 +101,18 @@ public class AlunoService {
         return new AlunoResponse(aluno);
     }
 
+    @Override
     public boolean atualizarStatus(EnumStatusAluno status, Long id) {
 
-        Aluno alunoBanco = alunoRepository.findById(id).orElse(null);
+        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+
+        Aluno alunoBanco = alunoRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusAluno.EXCLUIDO
+                )
+                .orElse(null);
 
         if (alunoBanco != null) {
             alunoBanco.setStatus(status);
