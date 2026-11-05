@@ -16,6 +16,7 @@ import com.example.tigregym.domain.repository.PlanoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -89,6 +90,10 @@ public class MatriculaService implements MatriculaServicePort {
             return null;
         }
 
+        if (planoBanco.getDuracaoEmMeses() == null || planoBanco.getDuracaoEmMeses() < 1) {
+            throw new IllegalArgumentException("O plano selecionado não possui duração válida!");
+        }
+
         if (id == 0L) {
             Matricula matriculaBanco = new Matricula();
             matriculaBanco.setAluno(alunoBanco);
@@ -98,8 +103,11 @@ public class MatriculaService implements MatriculaServicePort {
                 matriculaBanco.setEmpresa(empresa);
             }
 
-            matriculaBanco.setDataInicio(matricula.dataInicio());
-            matriculaBanco.setDataVencimento(matricula.dataVencimento());
+            LocalDateTime dataInicio = LocalDateTime.now();
+            matriculaBanco.setDataInicio(dataInicio);
+            matriculaBanco.setDataVencimento(
+                    dataInicio.plusMonths(planoBanco.getDuracaoEmMeses())
+            );
 
             matriculaRepository.save(matriculaBanco);
 
@@ -123,8 +131,17 @@ public class MatriculaService implements MatriculaServicePort {
         if (matriculaBanco != null) {
             matriculaBanco.setAluno(alunoBanco);
             matriculaBanco.setPlano(planoBanco);
-            matriculaBanco.setDataInicio(matricula.dataInicio());
-            matriculaBanco.setDataVencimento(matricula.dataVencimento());
+
+            LocalDateTime dataInicio = matriculaBanco.getDataInicio();
+
+            if (dataInicio == null) {
+                dataInicio = LocalDateTime.now();
+                matriculaBanco.setDataInicio(dataInicio);
+            }
+
+            matriculaBanco.setDataVencimento(
+                    dataInicio.plusMonths(planoBanco.getDuracaoEmMeses())
+            );
 
             matriculaRepository.save(matriculaBanco);
 

@@ -43,9 +43,9 @@ export default function UsuarioForm({
     }
   };
 
-  // Muda somente o campo que foi escolhido ou digitado
+  // Muda somente o aluno ou plano escolhido
   const handlerChange = (
-    campo: "alunoId" | "planoId" | "dataInicio" | "dataVencimento",
+    campo: "alunoId" | "planoId",
     valor: string
   ) => {
     setMatricula(
@@ -56,17 +56,16 @@ export default function UsuarioForm({
           valorAnterior.aluno,
           campo === "planoId" ? Number(valor) : valorAnterior.planoId,
           valorAnterior.plano,
-          campo === "dataInicio" ? valor : valorAnterior.dataInicio,
-          campo === "dataVencimento" ? valor : valorAnterior.dataVencimento,
+          valorAnterior.dataInicio,
+          valorAnterior.dataVencimento,
           valorAnterior.status
         )
     );
   };
 
-  const handlerSalvar = async (formData: FormData) => {
-    // Se a matrícula já existe, edita ela
+  const handlerSalvar = async () => {
     if (matriculaExistente) {
-      var dadosRetorno = await atualizarMatricula(matricula);
+      const dadosRetorno = await atualizarMatricula(matricula);
 
       if (dadosRetorno) {
         alert("Matrícula foi salva com sucesso!");
@@ -75,8 +74,7 @@ export default function UsuarioForm({
         return;
       }
     } else {
-      // Se não existe, cria uma nova
-      var dadosRetorno = await salvarMatricula(matricula);
+      const dadosRetorno = await salvarMatricula(matricula);
 
       if (dadosRetorno) {
         alert("Matrícula foi salva com sucesso!");
@@ -102,7 +100,7 @@ export default function UsuarioForm({
           </h2>
 
           <p className="text-zinc-500 mt-2">
-            Preencha os dados da matrícula.
+            Selecione o aluno e o plano. As datas são calculadas automaticamente.
           </p>
         </div>
 
@@ -155,36 +153,12 @@ export default function UsuarioForm({
               ))}
             </select>
           </div>
+        </div>
 
-          <div>
-            <label className="block text-sm font-semibold text-zinc-300 mb-2">
-              Data de início:
-            </label>
-
-            <input
-              name="dataInicio"
-              type="datetime-local"
-              value={matricula.dataInicio}
-              required
-              onChange={(e) => handlerChange("dataInicio", e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-zinc-300 mb-2">
-              Data de vencimento:
-            </label>
-
-            <input
-              name="dataVencimento"
-              type="datetime-local"
-              value={matricula.dataVencimento}
-              required
-              onChange={(e) => handlerChange("dataVencimento", e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
-            />
-          </div>
+        <div className="mt-5 rounded-lg border border-zinc-800 bg-zinc-900/50 p-4">
+          <p className="text-sm text-zinc-400">
+            A matrícula começa no momento do cadastro e vence conforme a duração do plano selecionado.
+          </p>
         </div>
 
         <div className="flex justify-end gap-3 mt-8">
