@@ -3,13 +3,10 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="330.0" prefWidth="389.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.back.MenuController">
+<AnchorPane prefHeight="220.0" prefWidth="389.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.back.MenuController">
    <children>
-      <Label layoutX="33.0" layoutY="24.0" text="TigreGym - Menu" />
-      <Button layoutX="33.0" layoutY="58.0" mnemonicParsing="false" onAction="#abrirCadastro" prefWidth="150.0" text="Cadastro Usuário" />
-      <Button layoutX="33.0" layoutY="100.0" mnemonicParsing="false" onAction="#abrirCadastroAluno" prefWidth="150.0" text="Cadastro Aluno" />
-      <Button layoutX="33.0" layoutY="142.0" mnemonicParsing="false" onAction="#abrirCadastroPlano" prefWidth="150.0" text="Cadastro Plano" />
-      <Button layoutX="33.0" layoutY="184.0" mnemonicParsing="false" onAction="#abrirCadastroMatricula" prefWidth="150.0" text="Cadastro Matrícula" />
-      <Button layoutX="33.0" layoutY="276.0" mnemonicParsing="false" onAction="#sair" text="Sair" />
+      <Label layoutX="33.0" layoutY="24.0" text="TigreGym - Inicialização" />
+      <Button layoutX="33.0" layoutY="70.0" mnemonicParsing="false" onAction="#abrirCadastro" prefWidth="220.0" text="Cadastrar Empresa + Admin" />
+      <Button layoutX="33.0" layoutY="160.0" mnemonicParsing="false" onAction="#sair" text="Sair" />
    </children>
 </AnchorPane>

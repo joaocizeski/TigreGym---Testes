@@ -3,21 +3,31 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.back.UsuarioController">
+<AnchorPane prefHeight="510.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.back.UsuarioController">
    <children>
-      <Label layoutX="24.0" layoutY="22.0" text="Cadastro de Usuário" />
+      <Label layoutX="24.0" layoutY="22.0" text="Cadastro da Empresa e Administrador" />
 
-      <Label layoutX="78.0" layoutY="70.0" text="Nome" />
-      <Label layoutX="78.0" layoutY="111.0" text="CPF" />
-      <Label layoutX="78.0" layoutY="152.0" text="Email" />
-      <Label layoutX="78.0" layoutY="193.0" text="Senha" />
+      <Label layoutX="62.0" layoutY="70.0" text="Razão Social" />
+      <Label layoutX="62.0" layoutY="111.0" text="Nome Fantasia" />
+      <Label layoutX="62.0" layoutY="152.0" text="CNPJ" />
 
-      <TextField fx:id="txtNome" layoutX="140.0" layoutY="66.0" prefWidth="250.0" />
-      <TextField fx:id="txtCpf" layoutX="140.0" layoutY="107.0" prefWidth="250.0" />
-      <TextField fx:id="txtEmail" layoutX="140.0" layoutY="148.0" prefWidth="250.0" />
-      <PasswordField fx:id="txtSenha" layoutX="140.0" layoutY="189.0" prefWidth="250.0" />
+      <TextField fx:id="txtRazaoSocial" layoutX="170.0" layoutY="66.0" prefWidth="300.0" />
+      <TextField fx:id="txtNomeFantasia" layoutX="170.0" layoutY="107.0" prefWidth="300.0" />
+      <TextField fx:id="txtCnpj" layoutX="170.0" layoutY="148.0" prefWidth="300.0" />
 
-      <Button layoutX="24.0" layoutY="354.0" mnemonicParsing="false" onAction="#voltar" text="Voltar" />
-      <Button layoutX="501.0" layoutY="354.0" mnemonicParsing="false" onAction="#salvarUsuario" text="Salvar" />
+      <Separator layoutX="62.0" layoutY="194.0" prefWidth="408.0" />
+
+      <Label layoutX="62.0" layoutY="222.0" text="Nome Admin" />
+      <Label layoutX="62.0" layoutY="263.0" text="CPF" />
+      <Label layoutX="62.0" layoutY="304.0" text="Email" />
+      <Label layoutX="62.0" layoutY="345.0" text="Senha" />
+
+      <TextField fx:id="txtNome" layoutX="170.0" layoutY="218.0" prefWidth="300.0" />
+      <TextField fx:id="txtCpf" layoutX="170.0" layoutY="259.0" prefWidth="300.0" />
+      <TextField fx:id="txtEmail" layoutX="170.0" layoutY="300.0" prefWidth="300.0" />
+      <PasswordField fx:id="txtSenha" layoutX="170.0" layoutY="341.0" prefWidth="300.0" />
+
+      <Button layoutX="24.0" layoutY="454.0" mnemonicParsing="false" onAction="#voltar" text="Voltar" />
+      <Button layoutX="540.0" layoutY="454.0" mnemonicParsing="false" onAction="#salvarUsuario" text="Salvar" />
    </children>
 </AnchorPane>

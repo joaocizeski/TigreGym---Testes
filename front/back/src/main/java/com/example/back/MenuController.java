@@ -13,38 +13,9 @@ public class MenuController {
 
     @FXML
     public void abrirCadastro(ActionEvent event) throws IOException {
+
         FXMLLoader loader =
                 new FXMLLoader(getClass().getResource("/com/example/back/cadastro-usuario-view.fxml"));
-
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-    }
-
-    @FXML
-    public void abrirCadastroAluno(ActionEvent event) throws IOException {
-        FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/example/back/cadastro-aluno-view.fxml"));
-
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-    }
-
-    @FXML
-    public void abrirCadastroPlano(ActionEvent event) throws IOException {
-        FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/example/back/cadastro-plano-view.fxml"));
-
-        Scene scene = new Scene(loader.load());
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.setScene(scene);
-    }
-
-    @FXML
-    public void abrirCadastroMatricula(ActionEvent event) throws IOException {
-        FXMLLoader loader =
-                new FXMLLoader(getClass().getResource("/com/example/back/cadastro-matricula-view.fxml"));
 
         Scene scene = new Scene(loader.load());
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

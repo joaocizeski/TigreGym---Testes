@@ -30,36 +30,53 @@ public class UsuarioController {
     private PasswordField txtSenha;
 
     @FXML
-    public void salvarUsuario(ActionEvent event) throws Exception {
+    private TextField txtRazaoSocial;
 
-        // Validar dados
+    @FXML
+    private TextField txtNomeFantasia;
+
+    @FXML
+    private TextField txtCnpj;
+
+    @FXML
+    public void salvarUsuario(ActionEvent event) throws Exception {
 
         String jsonRequest = String.format("{\n"
                         + "\"nome\": \"%s\",\n"
                         + "\"email\": \"%s\",\n"
                         + "\"senha\": \"%s\",\n"
                         + "\"cpf\": \"%s\",\n"
-                        + "\"secretKey\": \"%s\"\n"
+                        + "\"secretKey\": \"%s\",\n"
+                        + "\"razaoSocial\": \"%s\",\n"
+                        + "\"nomeFantasia\": \"%s\",\n"
+                        + "\"cnpj\": \"%s\"\n"
                         + "}",
                 txtNome.getText(),
                 txtEmail.getText(),
                 txtSenha.getText(),
                 txtCpf.getText(),
-                "lfd4156498465s15g1klfsda");
+                "lfd4156498465s15g1klfsda",
+                txtRazaoSocial.getText(),
+                txtNomeFantasia.getText(),
+                txtCnpj.getText());
 
-        int respostaAPI = executaMetodoAPI("http://localhost:8080/usuarios/admin",jsonRequest,"POST");
+        int respostaAPI = executaMetodoAPI(
+                "http://localhost:8080/usuarios/admin",
+                jsonRequest,
+                "POST"
+        );
 
-        if (respostaAPI==200){
-            showMessage(Alert.AlertType.INFORMATION, "Usuario salvo com sucesso!");
+        if (respostaAPI == 200) {
+            showMessage(Alert.AlertType.INFORMATION, "Empresa e administrador salvos com sucesso!");
             voltar(event);
         } else {
-            showMessage(Alert.AlertType.ERROR,"Erro ao salvar usuário!");
+            showMessage(Alert.AlertType.ERROR, "Erro ao salvar empresa e administrador!");
         }
-
     }
 
     @FXML
     public void voltar(ActionEvent event) throws IOException {
+
         FXMLLoader loader =
                 new FXMLLoader(getClass().getResource("/com/example/back/menu-view.fxml"));
 
@@ -68,36 +85,31 @@ public class UsuarioController {
         stage.setScene(scene);
     }
 
-    private int executaMetodoAPI(String url,String json,String protocoloHttp)
+    private int executaMetodoAPI(String url, String json, String protocoloHttp)
             throws Exception {
-
 
         URL urlAPI = new URL(url);
         HttpURLConnection connection = (HttpURLConnection) urlAPI.openConnection();
         connection.setRequestMethod(protocoloHttp);
         connection.setDoOutput(true);
 
+        if (!json.isEmpty()) {
+            connection.setRequestProperty("Content-Type", "application/json");
 
-        if(!json.isEmpty()){
-            connection.setRequestProperty("Content-Type","application/json");
-
-            try (OutputStream os = connection.getOutputStream()){
+            try (OutputStream os = connection.getOutputStream()) {
                 os.write(json.getBytes());
             }
-
         }
-        return connection.getResponseCode();
 
+        return connection.getResponseCode();
     }
 
-    private void showMessage(Alert.AlertType type, String msg){
+    private void showMessage(Alert.AlertType type, String msg) {
+
         Alert alerta = new Alert(type);
-
-
         alerta.setTitle("Mensagem do Sistema");
         alerta.setHeaderText(null);
         alerta.setContentText(msg);
         alerta.showAndWait();
     }
-
 }
