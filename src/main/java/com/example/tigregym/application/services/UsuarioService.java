@@ -139,10 +139,6 @@ public class UsuarioService implements UsuarioServicePort {
             usuarioBanco.setEmail(new Email(usuario.email()));
             usuarioBanco.setSenha(usuario.senha());
 
-            if (usuario.role() != null && !usuario.role().isBlank()) {
-                usuarioBanco.setRole(usuario.role());
-            }
-
             usuarioRepository.save(usuarioBanco);
             return new UsuarioResponse(usuarioBanco);
         }

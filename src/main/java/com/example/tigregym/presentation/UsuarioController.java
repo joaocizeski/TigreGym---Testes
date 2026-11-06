@@ -27,7 +27,7 @@ public class UsuarioController {
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de usuários!",
-            description = "Método responsável por efetuar a consulta de todos os usuários sem filtro")
+            description = "Método responsável por consultar os usuários da empresa do usuário logado")
     public ResponseEntity<List<UsuarioResponse>> listarTodos() {
         return ResponseEntity.ok(usuarioService.listarTodosUsuariosTable());
     }

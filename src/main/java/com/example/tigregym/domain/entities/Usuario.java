@@ -57,27 +57,7 @@ public class Usuario implements UserDetails {
         this.setNome(usuario.nome());
         this.setSenha(usuario.senha());
         this.setEmail(new Email(usuario.email()));
-        this.setRole(usuario.role());
-    }
-
-    public void setRole(String role) {
-
-        if (role == null || role.isBlank()) {
-            this.role = "ROLE_USER";
-            return;
-        }
-
-        String roleFormatada = role.toUpperCase();
-
-        if (!roleFormatada.startsWith("ROLE_")) {
-            roleFormatada = "ROLE_" + roleFormatada;
-        }
-
-        if (!List.of("ROLE_ADMIN", "ROLE_FUNCIONARIO", "ROLE_USER").contains(roleFormatada)) {
-            throw new IllegalArgumentException("Role inválida!");
-        }
-
-        this.role = roleFormatada;
+        this.setRole("ROLE_USER");
     }
 
     @Override

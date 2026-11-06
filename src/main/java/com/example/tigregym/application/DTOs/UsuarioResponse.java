@@ -8,8 +8,7 @@ public record UsuarioResponse(
         String nome,
         String cpf,
         String email,
-        EnumStatusUsuario status,
-        String role
+        EnumStatusUsuario status
 ) {
 
     public UsuarioResponse(Usuario usuarioEntidade) {
@@ -18,8 +17,7 @@ public record UsuarioResponse(
                 usuarioEntidade.getNome(),
                 usuarioEntidade.getCpf().toString(),
                 usuarioEntidade.getEmail().toString(),
-                usuarioEntidade.getStatus(),
-                usuarioEntidade.getRole()
+                usuarioEntidade.getStatus()
         );
     }
 }
