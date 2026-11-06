@@ -5,7 +5,20 @@ import com.example.tigregym.domain.entities.EnumStatusAluno;
 
 import java.time.LocalDate;
 
-public record AlunoResponse(Long id, String nome, String cpf, LocalDate dataNascimento, String telefone, String email, EnumStatusAluno status) {
+public record AlunoResponse(
+        Long id,
+        String nome,
+        String cpf,
+        LocalDate dataNascimento,
+        String telefone,
+        String email,
+        String cep,
+        String logradouro,
+        String bairro,
+        String cidade,
+        String uf,
+        EnumStatusAluno status
+) {
 
     public AlunoResponse(Aluno alunoEntidade) {
         this(
@@ -15,6 +28,11 @@ public record AlunoResponse(Long id, String nome, String cpf, LocalDate dataNasc
                 alunoEntidade.getDataNascimento(),
                 alunoEntidade.getTelefone().toString(),
                 alunoEntidade.getEmail().toString(),
+                alunoEntidade.getCep(),
+                alunoEntidade.getLogradouro(),
+                alunoEntidade.getBairro(),
+                alunoEntidade.getCidade(),
+                alunoEntidade.getUf(),
                 alunoEntidade.getStatus()
         );
     }

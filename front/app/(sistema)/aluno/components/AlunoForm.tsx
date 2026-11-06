@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Aluno, AlunoFormProps } from "../../../types/aluno";
 import { atualizarAluno, salvarAluno } from "@/app/services/alunoService";
+import { buscarCep } from "@/app/services/cepService";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
@@ -11,11 +12,22 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
   const router = useRouter();
 
   const [aluno, setAluno] = useState<Aluno>(
-    alunoExistente || new Aluno(null, "", "", "", "", "", "ATIVO")
+    alunoExistente ||
+      new Aluno(null, "", "", "", "", "", "", "", "", "", "", "ATIVO")
   );
 
   const handlerChange = (
-    campo: "nome" | "cpf" | "dataNascimento" | "telefone" | "email",
+    campo:
+      | "nome"
+      | "cpf"
+      | "dataNascimento"
+      | "telefone"
+      | "email"
+      | "cep"
+      | "logradouro"
+      | "bairro"
+      | "cidade"
+      | "uf",
     valor: string
   ) => {
     setAluno(
@@ -27,17 +39,58 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
           campo === "dataNascimento" ? valor : valorAnterior.dataNascimento,
           campo === "telefone" ? valor : valorAnterior.telefone,
           campo === "email" ? valor : valorAnterior.email,
+          campo === "cep" ? valor : valorAnterior.cep,
+          campo === "logradouro" ? valor : valorAnterior.logradouro,
+          campo === "bairro" ? valor : valorAnterior.bairro,
+          campo === "cidade" ? valor : valorAnterior.cidade,
+          campo === "uf" ? valor : valorAnterior.uf,
           valorAnterior.status
         )
     );
   };
 
-  const handlerSalvar = async (formData: FormData) => {
+  const handlerBuscarCep = async () => {
+    try {
+      if (!aluno.cep || aluno.cep.replace(/\D/g, "").length !== 8) {
+        alert("Informe um CEP com 8 números!");
+        return;
+      }
+
+      const endereco = await buscarCep(aluno.cep);
+
+      setAluno(
+        (valorAnterior) =>
+          new Aluno(
+            valorAnterior.id,
+            valorAnterior.nome,
+            valorAnterior.cpf,
+            valorAnterior.dataNascimento,
+            valorAnterior.telefone,
+            valorAnterior.email,
+            endereco.cep || valorAnterior.cep,
+            endereco.logradouro || "",
+            endereco.bairro || "",
+            endereco.localidade || "",
+            endereco.uf || "",
+            valorAnterior.status
+          )
+      );
+
+    } catch (error) {
+      if (axios.isAxiosError(error) && error.response?.data) {
+        alert(error.response.data);
+      } else {
+        alert("Erro ao consultar CEP!");
+      }
+    }
+  };
+
+  const handlerSalvar = async () => {
     try {
 
       if (alunoExistente) {
 
-        var dadosRetorno = await atualizarAluno(aluno);
+        const dadosRetorno = await atualizarAluno(aluno);
 
         if (dadosRetorno) {
           alert("Aluno foi salvo com sucesso!");
@@ -48,7 +101,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
 
       } else {
 
-        var dadosRetorno = await salvarAluno(aluno);
+        const dadosRetorno = await salvarAluno(aluno);
 
         if (dadosRetorno) {
           alert("Aluno foi salvo com sucesso!");
@@ -173,6 +226,88 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
               required
               onChange={(e) => handlerChange("email", e.target.value)}
               placeholder="aluno@email.com"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+            />
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              CEP:
+            </label>
+
+            <div className="flex gap-3">
+              <input
+                name="cep"
+                value={aluno.cep}
+                required
+                onChange={(e) => handlerChange("cep", e.target.value)}
+                placeholder="88888-888"
+                className="flex-1 bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+              />
+
+              <button
+                type="button"
+                onClick={handlerBuscarCep}
+                className="px-5 py-3 rounded-lg border border-yellow-400 text-yellow-400 font-bold hover:bg-yellow-400 hover:text-black transition"
+              >
+                Buscar CEP
+              </button>
+            </div>
+
+            <p className="text-xs text-zinc-500 mt-2">
+              O endereço é consultado no ViaCEP através do backend.
+            </p>
+          </div>
+
+          <div className="md:col-span-2">
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              Logradouro:
+            </label>
+
+            <input
+              name="logradouro"
+              value={aluno.logradouro}
+              onChange={(e) => handlerChange("logradouro", e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              Bairro:
+            </label>
+
+            <input
+              name="bairro"
+              value={aluno.bairro}
+              onChange={(e) => handlerChange("bairro", e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              Cidade:
+            </label>
+
+            <input
+              name="cidade"
+              value={aluno.cidade}
+              onChange={(e) => handlerChange("cidade", e.target.value)}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              UF:
+            </label>
+
+            <input
+              name="uf"
+              value={aluno.uf}
+              onChange={(e) => handlerChange("uf", e.target.value)}
+              maxLength={2}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
             />
           </div>

@@ -7,6 +7,11 @@ public record AlunoRequest(
         String cpf,
         LocalDate dataNascimento,
         String telefone,
-        String email
+        String email,
+        String cep,
+        String logradouro,
+        String bairro,
+        String cidade,
+        String uf
 ) {
 }

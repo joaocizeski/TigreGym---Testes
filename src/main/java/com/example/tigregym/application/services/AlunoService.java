@@ -51,6 +51,11 @@ public class AlunoService implements AlunoServicePort {
             alunoBanco.setDataNascimento(aluno.dataNascimento());
             alunoBanco.setTelefone(new Telefone(aluno.telefone()));
             alunoBanco.setEmail(new Email(aluno.email()));
+            alunoBanco.setCep(aluno.cep());
+            alunoBanco.setLogradouro(aluno.logradouro());
+            alunoBanco.setBairro(aluno.bairro());
+            alunoBanco.setCidade(aluno.cidade());
+            alunoBanco.setUf(aluno.uf());
             alunoBanco.setEmpresa(empresa);
 
             alunoRepository.save(alunoBanco);
@@ -71,6 +76,11 @@ public class AlunoService implements AlunoServicePort {
             alunoBanco.setDataNascimento(aluno.dataNascimento());
             alunoBanco.setTelefone(new Telefone(aluno.telefone()));
             alunoBanco.setEmail(new Email(aluno.email()));
+            alunoBanco.setCep(aluno.cep());
+            alunoBanco.setLogradouro(aluno.logradouro());
+            alunoBanco.setBairro(aluno.bairro());
+            alunoBanco.setCidade(aluno.cidade());
+            alunoBanco.setUf(aluno.uf());
 
             alunoRepository.save(alunoBanco);
             return new AlunoResponse(alunoBanco);

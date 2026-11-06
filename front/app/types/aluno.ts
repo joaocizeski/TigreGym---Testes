@@ -6,6 +6,11 @@ export class Aluno {
     public dataNascimento: string,
     public telefone: string,
     public email: string,
+    public cep: string,
+    public logradouro: string,
+    public bairro: string,
+    public cidade: string,
+    public uf: string,
     public status: string
   ) {}
 }

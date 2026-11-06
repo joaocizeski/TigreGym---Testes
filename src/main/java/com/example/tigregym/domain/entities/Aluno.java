@@ -46,6 +46,16 @@ public class Aluno {
     @Embedded
     public Email email;
 
+    public String cep;
+
+    public String logradouro;
+
+    public String bairro;
+
+    public String cidade;
+
+    public String uf;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "empresa_id", referencedColumnName = "id")
     private Empresa empresa;
