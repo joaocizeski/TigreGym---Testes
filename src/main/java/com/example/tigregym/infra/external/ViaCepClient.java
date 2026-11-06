@@ -1,7 +1,7 @@
 package com.example.tigregym.infra.external;
 
 import com.example.tigregym.infra.dto.ViaCepResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
