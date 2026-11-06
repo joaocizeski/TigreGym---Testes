@@ -58,19 +58,11 @@ public class UsuarioService implements UsuarioServicePort {
     @Override
     public List<UsuarioResponse> listarTodosUsuariosTable() {
 
-        var usuarioLogado = getUsuarioLogado();
-
-        if (usuarioLogado.empresa_id() == null) {
-            return usuarioRepository.findByStatusNot(EnumStatusUsuario.EXCLUIDO)
-                    .orElse(List.of())
-                    .stream()
-                    .map(UsuarioResponse::new)
-                    .toList();
-        }
+        Empresa empresa = getEmpresaUsuarioLogado();
 
         return usuarioRepository
                 .findByEmpresa_IdAndStatusNot(
-                        usuarioLogado.empresa_id(),
+                        empresa.getId(),
                         EnumStatusUsuario.EXCLUIDO
                 )
                 .stream()
@@ -113,11 +105,12 @@ public class UsuarioService implements UsuarioServicePort {
         var usuarioLogado = getUsuarioLogado();
 
         if (usuarioLogado.empresa_id() == null) {
-            return null;
+            throw new IllegalStateException("Usuário não possui empresa vinculada!");
         }
 
         return empresaRepository.findById(usuarioLogado.empresa_id())
-                .orElse(null);
+                .orElseThrow(() ->
+                        new IllegalStateException("Empresa do usuário não encontrada!"));
     }
 
     @Override
@@ -127,28 +120,18 @@ public class UsuarioService implements UsuarioServicePort {
 
         if (id == 0L) {
             Usuario usuarioBanco = new Usuario(usuario);
-
-            if (empresa != null) {
-                usuarioBanco.setEmpresa(empresa);
-            }
-
+            usuarioBanco.setEmpresa(empresa);
             usuarioRepository.save(usuarioBanco);
             return new UsuarioResponse(usuarioBanco);
         }
 
-        Usuario usuarioBanco;
-
-        if (empresa == null) {
-            usuarioBanco = usuarioRepository.findById(id).orElse(null);
-        } else {
-            usuarioBanco = usuarioRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            id,
-                            empresa.getId(),
-                            EnumStatusUsuario.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Usuario usuarioBanco = usuarioRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusUsuario.EXCLUIDO
+                )
+                .orElse(null);
 
         if (usuarioBanco != null) {
             usuarioBanco.setNome(usuario.nome());
@@ -161,7 +144,6 @@ public class UsuarioService implements UsuarioServicePort {
             }
 
             usuarioRepository.save(usuarioBanco);
-
             return new UsuarioResponse(usuarioBanco);
         }
 
@@ -171,20 +153,15 @@ public class UsuarioService implements UsuarioServicePort {
     @Override
     public UsuarioResponse buscarPorId(Long id) {
 
-        var usuarioLogado = getUsuarioLogado();
-        Usuario usuario;
+        Empresa empresa = getEmpresaUsuarioLogado();
 
-        if (usuarioLogado.empresa_id() == null) {
-            usuario = usuarioRepository.findById(id).orElse(null);
-        } else {
-            usuario = usuarioRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            id,
-                            usuarioLogado.empresa_id(),
-                            EnumStatusUsuario.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Usuario usuario = usuarioRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusUsuario.EXCLUIDO
+                )
+                .orElse(null);
 
         if (usuario == null) {
             return null;
@@ -196,20 +173,15 @@ public class UsuarioService implements UsuarioServicePort {
     @Override
     public boolean atualizarStatus(EnumStatusUsuario status, Long id) {
 
-        var usuarioLogado = getUsuarioLogado();
-        Usuario usuarioBanco;
+        Empresa empresa = getEmpresaUsuarioLogado();
 
-        if (usuarioLogado.empresa_id() == null) {
-            usuarioBanco = usuarioRepository.findById(id).orElse(null);
-        } else {
-            usuarioBanco = usuarioRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            id,
-                            usuarioLogado.empresa_id(),
-                            EnumStatusUsuario.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Usuario usuarioBanco = usuarioRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusUsuario.EXCLUIDO
+                )
+                .orElse(null);
 
         if (usuarioBanco != null) {
             usuarioBanco.setStatus(status);
@@ -225,8 +197,14 @@ public class UsuarioService implements UsuarioServicePort {
 
         try {
             var usuarioLogado = getUsuarioLogado();
+            Empresa empresa = getEmpresaUsuarioLogado();
 
-            return usuarioRepository.findById(usuarioLogado.id())
+            return usuarioRepository
+                    .findByIdAndEmpresa_IdAndStatusNot(
+                            usuarioLogado.id(),
+                            empresa.getId(),
+                            EnumStatusUsuario.EXCLUIDO
+                    )
                     .stream()
                     .map(UsuarioResponse::new)
                     .findFirst()

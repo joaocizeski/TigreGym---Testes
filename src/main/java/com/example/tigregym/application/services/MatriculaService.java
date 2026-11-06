@@ -39,14 +39,6 @@ public class MatriculaService implements MatriculaServicePort {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
-        if (empresa == null) {
-            return matriculaRepository.findByStatusNot(EnumStatusMatricula.EXCLUIDO)
-                    .orElse(List.of())
-                    .stream()
-                    .map(MatriculaResponse::new)
-                    .toList();
-        }
-
         return matriculaRepository
                 .findByEmpresa_IdAndStatusNot(
                         empresa.getId(),
@@ -62,29 +54,21 @@ public class MatriculaService implements MatriculaServicePort {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
-        Aluno alunoBanco;
-        Plano planoBanco;
+        Aluno alunoBanco = alunoRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        matricula.aluno_id(),
+                        empresa.getId(),
+                        EnumStatusAluno.EXCLUIDO
+                )
+                .orElse(null);
 
-        if (empresa == null) {
-            alunoBanco = alunoRepository.findById(matricula.aluno_id()).orElse(null);
-            planoBanco = planoRepository.findById(matricula.plano_id()).orElse(null);
-        } else {
-            alunoBanco = alunoRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            matricula.aluno_id(),
-                            empresa.getId(),
-                            EnumStatusAluno.EXCLUIDO
-                    )
-                    .orElse(null);
-
-            planoBanco = planoRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            matricula.plano_id(),
-                            empresa.getId(),
-                            EnumStatusPlano.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Plano planoBanco = planoRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        matricula.plano_id(),
+                        empresa.getId(),
+                        EnumStatusPlano.EXCLUIDO
+                )
+                .orElse(null);
 
         if (alunoBanco == null || planoBanco == null) {
             return null;
@@ -98,10 +82,7 @@ public class MatriculaService implements MatriculaServicePort {
             Matricula matriculaBanco = new Matricula();
             matriculaBanco.setAluno(alunoBanco);
             matriculaBanco.setPlano(planoBanco);
-
-            if (empresa != null) {
-                matriculaBanco.setEmpresa(empresa);
-            }
+            matriculaBanco.setEmpresa(empresa);
 
             LocalDateTime dataInicio = LocalDateTime.now();
             matriculaBanco.setDataInicio(dataInicio);
@@ -110,23 +91,16 @@ public class MatriculaService implements MatriculaServicePort {
             );
 
             matriculaRepository.save(matriculaBanco);
-
             return new MatriculaResponse(matriculaBanco);
         }
 
-        Matricula matriculaBanco;
-
-        if (empresa == null) {
-            matriculaBanco = matriculaRepository.findById(id).orElse(null);
-        } else {
-            matriculaBanco = matriculaRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            id,
-                            empresa.getId(),
-                            EnumStatusMatricula.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Matricula matriculaBanco = matriculaRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusMatricula.EXCLUIDO
+                )
+                .orElse(null);
 
         if (matriculaBanco != null) {
             matriculaBanco.setAluno(alunoBanco);
@@ -144,7 +118,6 @@ public class MatriculaService implements MatriculaServicePort {
             );
 
             matriculaRepository.save(matriculaBanco);
-
             return new MatriculaResponse(matriculaBanco);
         }
 
@@ -155,19 +128,14 @@ public class MatriculaService implements MatriculaServicePort {
     public MatriculaResponse buscarPorId(Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
-        Matricula matricula;
 
-        if (empresa == null) {
-            matricula = matriculaRepository.findById(id).orElse(null);
-        } else {
-            matricula = matriculaRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            id,
-                            empresa.getId(),
-                            EnumStatusMatricula.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Matricula matricula = matriculaRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusMatricula.EXCLUIDO
+                )
+                .orElse(null);
 
         if (matricula == null) {
             return null;
@@ -180,19 +148,14 @@ public class MatriculaService implements MatriculaServicePort {
     public boolean atualizarStatus(EnumStatusMatricula status, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
-        Matricula matriculaBanco;
 
-        if (empresa == null) {
-            matriculaBanco = matriculaRepository.findById(id).orElse(null);
-        } else {
-            matriculaBanco = matriculaRepository
-                    .findByIdAndEmpresa_IdAndStatusNot(
-                            id,
-                            empresa.getId(),
-                            EnumStatusMatricula.EXCLUIDO
-                    )
-                    .orElse(null);
-        }
+        Matricula matriculaBanco = matriculaRepository
+                .findByIdAndEmpresa_IdAndStatusNot(
+                        id,
+                        empresa.getId(),
+                        EnumStatusMatricula.EXCLUIDO
+                )
+                .orElse(null);
 
         if (matriculaBanco != null) {
             matriculaBanco.setStatus(status);

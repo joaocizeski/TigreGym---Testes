@@ -38,7 +38,7 @@ public class JwtFIlter extends OncePerRequestFilter {
                 || uri.startsWith("/v3/api-docs")
                 || uri.startsWith("/swagger-resources")
                 || uri.startsWith("/webjars")
-                || uri.equals("/auth/login")
+                || uri.startsWith("/auth/login")
                 || ("POST".equalsIgnoreCase(request.getMethod())
                 && uri.equals("/usuarios/admin"))) {
 
@@ -50,7 +50,7 @@ public class JwtFIlter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
-            String token = authHeader.substring(7);
+            String token = authHeader.replace("Bearer ", "");
 
             try {
                 var usuarioLogado = tokenService.verificarToken(token);
@@ -69,6 +69,12 @@ public class JwtFIlter extends OncePerRequestFilter {
                 response.getWriter().println("Token inválido");
                 return;
             }
+
+        } else {
+            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().println("Token inválido");
+            return;
         }
 
         filterChain.doFilter(request, response);
