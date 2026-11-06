@@ -109,6 +109,7 @@ export default function Alunos() {
                 <th className="p-5">Nascimento</th>
                 <th className="p-5">Telefone</th>
                 <th className="p-5">E-mail</th>
+                <th className="p-5">Cidade/UF</th>
                 <th className="p-5">Status</th>
                 <th className="p-5">Ações</th>
               </tr>
@@ -132,6 +133,12 @@ export default function Alunos() {
                   <td className="p-5 text-zinc-400">{aluno.telefone}</td>
 
                   <td className="p-5 text-zinc-400">{aluno.email}</td>
+
+                  <td className="p-5 text-zinc-400">
+                    {aluno.cidade && aluno.uf
+                      ? `${aluno.cidade}/${aluno.uf}`
+                      : "-"}
+                  </td>
 
                   <td className="p-5">
                     <span className={`inline-flex px-3 py-1 rounded-full border text-xs font-bold ${
@@ -178,7 +185,7 @@ export default function Alunos() {
 
               {alunos.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="p-10 text-center text-zinc-500">
+                  <td colSpan={9} className="p-10 text-center text-zinc-500">
                     Nenhum aluno encontrado!
                   </td>
                 </tr>

@@ -49,10 +49,10 @@ export default function Home() {
               </p>
 
               <div className="hero-botoes">
-                <a href="/login" className="botao-principal">
+                <Link href="/login" className="botao-principal">
                   Acessar TigreGym
                   <span>→</span>
-                </a>
+                </Link>
 
                 <a href="#historia" className="botao-secundario">
                   Conheça nossa história
@@ -271,10 +271,10 @@ export default function Home() {
               </p>
             </div>
 
-            <a href="/login" className="botao-principal">
+            <Link href="/login" className="botao-principal">
               Acessar agora
               <span>→</span>
-            </a>
+            </Link>
           </div>
         </section>
       </main>
