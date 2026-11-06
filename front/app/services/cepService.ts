@@ -1,17 +1,18 @@
 import api from "./api";
 
-export interface CepResponse {
+export interface EnderecoResponse {
   cep: string;
   logradouro: string;
-  complemento: string;
   bairro: string;
-  localidade: string;
+  cidade: string;
   uf: string;
-  erro?: boolean;
 }
 
-export async function buscarCep(cep: string): Promise<CepResponse> {
-  const cepFormatado = cep.replace(/\D/g, "");
-  const resposta = await api.get<CepResponse>('/integracoes/cep/' + cepFormatado);
+export async function buscarCep(cep: string): Promise<EnderecoResponse> {
+
+  const resposta = await api.get<EnderecoResponse>(
+    '/api/enderecos/' + cep
+  );
+
   return resposta.data;
 }

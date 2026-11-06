@@ -70,7 +70,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             endereco.cep || valorAnterior.cep,
             endereco.logradouro || "",
             endereco.bairro || "",
-            endereco.localidade || "",
+            endereco.cidade || "",
             endereco.uf || "",
             valorAnterior.status
           )
