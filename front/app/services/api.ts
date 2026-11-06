@@ -3,6 +3,7 @@
 import axios from "@/node_modules/axios/index";
 import { store } from "../redux/store";
 import { logout } from "../redux/slices/authSlice";
+import { limparAlunos } from "../redux/slices/alunosSlice";
 
 const api = axios.create({
     baseURL:'http://localhost:8080'
@@ -24,6 +25,7 @@ api.interceptors.response.use(
     (response) => response,
     (error) => {
         if(error.response?.status === 401){
+            store.dispatch(limparAlunos());
             store.dispatch(logout());
         }
 

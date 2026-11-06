@@ -1,6 +1,5 @@
 import { Aluno } from "@/app/types/aluno";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { logout } from "./authSlice";
 
 interface AlunosState {
   lista: Aluno[];
@@ -21,11 +20,6 @@ const alunosSlice = createSlice({
     limparAlunos: (state) => {
       state.lista = [];
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(logout, (state) => {
-      state.lista = [];
-    });
   },
 });
 

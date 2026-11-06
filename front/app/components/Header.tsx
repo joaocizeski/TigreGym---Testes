@@ -2,6 +2,7 @@
 
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/slices/authSlice";
+import { limparAlunos } from "../redux/slices/alunosSlice";
 import { RootState } from "../redux/store";
 
 export default function Header() {
@@ -42,6 +43,7 @@ export default function Header() {
 
         <button
           onClick={() => {
+            dispatch(limparAlunos());
             dispatch(logout());
           }}
           className="rounded-lg border border-[#F5C518] px-4 py-2 text-sm font-semibold text-[#F5C518] transition hover:bg-[#F5C518] hover:text-black"
