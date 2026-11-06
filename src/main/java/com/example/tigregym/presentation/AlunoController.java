@@ -25,7 +25,7 @@ public class AlunoController {
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de alunos!",
-            description = "Método responsável por efetuar a consulta de todos os alunos sem filtro")
+            description = "Método responsável por consultar os alunos da empresa do usuário logado")
     public ResponseEntity<List<AlunoResponse>> listarTodos() {
         return ResponseEntity.ok(alunoService.listarTodosAlunoTable());
     }

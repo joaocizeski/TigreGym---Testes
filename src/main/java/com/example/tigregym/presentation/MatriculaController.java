@@ -25,7 +25,7 @@ public class MatriculaController {
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de matrículas!",
-            description = "Método responsável por efetuar a consulta de todas as matrículas sem filtro")
+            description = "Método responsável por consultar as matrículas da empresa do usuário logado")
     public ResponseEntity<List<MatriculaResponse>> listarTodos() {
         return ResponseEntity.ok(matriculaService.listarTodosMatriculaTable());
     }

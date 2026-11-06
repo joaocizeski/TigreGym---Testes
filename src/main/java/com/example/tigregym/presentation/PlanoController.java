@@ -25,7 +25,7 @@ public class PlanoController {
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de planos!",
-            description = "Método responsável por efetuar a consulta de todos os planos sem filtro")
+            description = "Método responsável por consultar os planos da empresa do usuário logado")
     public ResponseEntity<List<PlanoResponse>> listarTodos() {
         return ResponseEntity.ok(planoService.listarTodosPlanoTable());
     }
