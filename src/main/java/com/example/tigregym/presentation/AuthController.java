@@ -1,8 +1,6 @@
 package com.example.tigregym.presentation;
 
-import com.example.tigregym.application.DTOs.CadastroRequest;
 import com.example.tigregym.application.DTOs.LoginRequest;
-import com.example.tigregym.application.DTOs.RecuperarSenhaRequest;
 import com.example.tigregym.application.ports.UsuarioServicePort;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

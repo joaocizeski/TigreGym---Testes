@@ -1,21 +1,26 @@
 package com.example.tigregym.application.services;
 
 import com.example.tigregym.application.DTOs.EnderecoResponse;
-import com.example.tigregym.application.ports.EnderecoClientPort;
-import com.example.tigregym.application.ports.EnderecoServicePort;
+import com.example.tigregym.domain.interfaces.IVIaCepExternalRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public class EnderecoService implements EnderecoServicePort {
+public class EnderecoService {
 
-    private final EnderecoClientPort enderecoClient;
+    @Autowired
+    private IVIaCepExternalRepository vIaCepExternalRepository;
 
-    public EnderecoService(EnderecoClientPort enderecoClient) {
-        this.enderecoClient = enderecoClient;
-    }
+   public ResponseEntity<EnderecoResponse> BuscarEndereço(String cep){
 
-    @Override
-    public EnderecoResponse buscarEnderecoFormatado(String cep) {
-        return enderecoClient.consultarCep(cep);
-    }
+        var enderecoCompleto = vIaCepExternalRepository.buscarEnderecoViaCepPorCep(cep);
+
+        return new EnderecoResponse( enderecoCompleto.getCep(),
+                enderecoCompleto.getLogradouro(),
+                enderecoCompleto.getBairro(),
+                enderecoCompleto.getLocalidade(),
+                enderecoCompleto.getUf());
+   }
+
 }
