@@ -32,8 +32,12 @@ public record AlunoResponse(
                 alunoEntidade.getEmail().toString(),
                 alunoEntidade.getCep(),
                 alunoEntidade.getLogradouro(),
-                alunoEntidade.getNumero(),
-                alunoEntidade.getComplemento(),
+                alunoEntidade.getNumero() == null || alunoEntidade.getNumero().isBlank()
+                        ? "S/N"
+                        : alunoEntidade.getNumero(),
+                alunoEntidade.getComplemento() == null
+                        ? ""
+                        : alunoEntidade.getComplemento(),
                 alunoEntidade.getBairro(),
                 alunoEntidade.getCidade(),
                 alunoEntidade.getUf(),
