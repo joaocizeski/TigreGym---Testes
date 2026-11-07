@@ -339,7 +339,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
 
             <input
               name="numero"
-              value={aluno.numero}
+              value={aluno.numero || ""}
               inputMode="numeric"
               pattern="[0-9]*"
               onFocus={() => {
@@ -348,7 +348,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
                 }
               }}
               onBlur={() => {
-                if (!aluno.numero.trim()) {
+                if (!aluno.numero || !aluno.numero.trim()) {
                   handlerChange("numero", "S/N");
                 }
               }}
@@ -365,7 +365,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
 
             <input
               name="complemento"
-              value={aluno.complemento}
+              value={aluno.complemento || ""}
               onChange={(e) => handlerChange("complemento", e.target.value)}
               placeholder="Apartamento, bloco, sala..."
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
