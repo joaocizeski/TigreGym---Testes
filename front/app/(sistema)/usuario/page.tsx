@@ -110,7 +110,11 @@ export default function Usuarios(){
                 {usuarios.map((usuario) => (
                   <tr
                     key={usuario.id}
-                    className="hover:bg-zinc-900/80 transition-colors duration-150"
+                    className={
+                      usuario.status === "EXCLUIDO"
+                        ? "bg-red-950/20 opacity-60 border-t border-red-900/40"
+                        : "hover:bg-zinc-900/80 transition-colors duration-150"
+                    }
                   >
                     <td className="px-6 py-5 text-sm font-medium text-zinc-500">
                       {usuario.id}
@@ -141,32 +145,38 @@ export default function Usuarios(){
                     </td>
 
                     <td className="px-6 py-5 text-sm font-medium">
-                      <div className="flex items-center gap-4">
-                        <Link
-                          href={"/usuario/" + usuario.id + "/editar"}
-                          className="text-yellow-400 hover:text-yellow-300"
-                        >
-                          Editar
-                        </Link>
+                      {usuario.status === "EXCLUIDO" ? (
+                        <span className="text-red-400 font-bold">
+                          Registro excluído
+                        </span>
+                      ) : (
+                        <div className="flex items-center gap-4">
+                          <Link
+                            href={"/usuario/" + usuario.id + "/editar"}
+                            className="text-yellow-400 hover:text-yellow-300"
+                          >
+                            Editar
+                          </Link>
 
-                        <button
-                          onClick={() => handleDeletarUsuario(usuario)}
-                          className="text-red-500 hover:text-red-400"
-                        >
-                          Excluir
-                        </button>
+                          <button
+                            onClick={() => handleDeletarUsuario(usuario)}
+                            className="text-red-500 hover:text-red-400"
+                          >
+                            Excluir
+                          </button>
 
-                        <button
-                          onClick={() => handleAlterarStatusUsuario(usuario)}
-                          className={
-                            usuario.status === "BLOQUEADO"
-                              ? "text-orange-400 hover:text-orange-300"
-                              : "text-green-400 hover:text-green-300"
-                          }
-                        >
-                          {usuario.status}
-                        </button>
-                      </div>
+                          <button
+                            onClick={() => handleAlterarStatusUsuario(usuario)}
+                            className={
+                              usuario.status === "BLOQUEADO"
+                                ? "text-orange-400 hover:text-orange-300"
+                                : "text-green-400 hover:text-green-300"
+                            }
+                          >
+                            {usuario.status}
+                          </button>
+                        </div>
+                      )}
                     </td>
                   </tr>
                 ))}

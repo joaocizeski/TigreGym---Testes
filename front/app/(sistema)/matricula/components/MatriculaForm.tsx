@@ -37,7 +37,9 @@ export default function UsuarioForm({
       ]);
 
       setAlunos(dadosAlunos);
-      setPlanos(dadosPlanos);
+      setPlanos(
+        dadosPlanos.filter((plano) => plano.status === "ATIVO")
+      );
     } catch (error) {
       alert("Erro ao carregar alunos e planos!");
     }

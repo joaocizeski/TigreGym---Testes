@@ -15,6 +15,8 @@ public interface MatriculaRepository extends JpaRepository<Matricula, Long> {
 
     List<Matricula> findByEmpresa_IdAndStatusNot(Long empresaId, EnumStatusMatricula status);
 
+    List<Matricula> findByEmpresa_IdOrderByStatusAsc(Long empresaId);
+
     Optional<Matricula> findByIdAndEmpresa_IdAndStatusNot(
             Long id,
             Long empresaId,

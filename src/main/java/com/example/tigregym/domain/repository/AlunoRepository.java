@@ -15,6 +15,8 @@ public interface AlunoRepository extends JpaRepository<Aluno, Long> {
 
     List<Aluno> findByEmpresa_IdAndStatusNot(Long empresaId, EnumStatusAluno status);
 
+    List<Aluno> findByEmpresa_IdOrderByStatusAsc(Long empresaId);
+
     Optional<Aluno> findByIdAndEmpresa_IdAndStatusNot(
             Long id,
             Long empresaId,

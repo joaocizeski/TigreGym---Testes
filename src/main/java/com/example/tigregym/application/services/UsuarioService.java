@@ -61,10 +61,7 @@ public class UsuarioService implements UsuarioServicePort {
         Empresa empresa = getEmpresaUsuarioLogado();
 
         return usuarioRepository
-                .findByEmpresa_IdAndStatusNot(
-                        empresa.getId(),
-                        EnumStatusUsuario.EXCLUIDO
-                )
+                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
                 .stream()
                 .map(UsuarioResponse::new)
                 .toList();

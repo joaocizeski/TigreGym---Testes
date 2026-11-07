@@ -75,7 +75,11 @@ export default function Planos() {
           {planos.map((plano) => (
             <div
               key={plano.id}
-              className="bg-zinc-950 border border-zinc-800 rounded-2xl p-7 hover:border-yellow-400 transition"
+              className={
+                plano.status === "EXCLUIDO"
+                  ? "bg-red-950/20 border border-red-900/40 rounded-2xl p-7 opacity-60"
+                  : "bg-zinc-950 border border-zinc-800 rounded-2xl p-7 hover:border-yellow-400 transition"
+              }
             >
               <div className="flex items-start justify-between">
                 <div className="w-12 h-12 bg-zinc-900 rounded-xl flex items-center justify-center text-2xl">
@@ -122,30 +126,38 @@ export default function Planos() {
               </div>
 
               <div className="flex items-center gap-4 mt-6 pt-5 border-t border-zinc-800">
-                <Link
-                  href={"/plano/" + plano.id + "/editar"}
-                  className="text-yellow-400 hover:text-yellow-300"
-                >
-                  Editar
-                </Link>
+                {plano.status === "EXCLUIDO" ? (
+                  <span className="text-red-400 font-bold">
+                    Registro excluído
+                  </span>
+                ) : (
+                  <>
+                    <Link
+                      href={"/plano/" + plano.id + "/editar"}
+                      className="text-yellow-400 hover:text-yellow-300"
+                    >
+                      Editar
+                    </Link>
 
-                <button
-                  onClick={() => handleDeletarPlano(plano)}
-                  className="text-red-500 hover:text-red-400"
-                >
-                  Excluir
-                </button>
+                    <button
+                      onClick={() => handleDeletarPlano(plano)}
+                      className="text-red-500 hover:text-red-400"
+                    >
+                      Excluir
+                    </button>
 
-                <button
-                  onClick={() => handleAlterarStatusPlano(plano)}
-                  className={
-                    plano.status === "BLOQUEADO"
-                      ? "text-orange-400 hover:text-orange-300"
-                      : "text-green-400 hover:text-green-300"
-                  }
-                >
-                  {plano.status}
-                </button>
+                    <button
+                      onClick={() => handleAlterarStatusPlano(plano)}
+                      className={
+                        plano.status === "BLOQUEADO"
+                          ? "text-orange-400 hover:text-orange-300"
+                          : "text-green-400 hover:text-green-300"
+                      }
+                    >
+                      {plano.status}
+                    </button>
+                  </>
+                )}
               </div>
             </div>
           ))}

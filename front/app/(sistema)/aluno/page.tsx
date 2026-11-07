@@ -120,7 +120,11 @@ export default function Alunos() {
               {alunos.map((aluno) => (
                 <tr
                   key={aluno.id}
-                  className="border-t border-zinc-800 hover:bg-zinc-900/40"
+                  className={
+                    aluno.status === "EXCLUIDO"
+                      ? "border-t border-red-900/40 bg-red-950/20 opacity-60"
+                      : "border-t border-zinc-800 hover:bg-zinc-900/40"
+                  }
                 >
                   <td className="p-5 text-zinc-500">{aluno.id}</td>
 
@@ -153,32 +157,38 @@ export default function Alunos() {
                   </td>
 
                   <td className="p-5">
-                    <div className="flex items-center gap-4">
-                      <Link
-                        href={"/aluno/" + aluno.id + "/editar"}
-                        className="text-yellow-400 hover:text-yellow-300"
-                      >
-                        Editar
-                      </Link>
+                    {aluno.status === "EXCLUIDO" ? (
+                      <span className="text-red-400 font-bold">
+                        Registro excluído
+                      </span>
+                    ) : (
+                      <div className="flex items-center gap-4">
+                        <Link
+                          href={"/aluno/" + aluno.id + "/editar"}
+                          className="text-yellow-400 hover:text-yellow-300"
+                        >
+                          Editar
+                        </Link>
 
-                      <button
-                        onClick={() => handleDeletarAluno(aluno)}
-                        className="text-red-500 hover:text-red-400"
-                      >
-                        Excluir
-                      </button>
+                        <button
+                          onClick={() => handleDeletarAluno(aluno)}
+                          className="text-red-500 hover:text-red-400"
+                        >
+                          Excluir
+                        </button>
 
-                      <button
-                        onClick={() => handleAlterarStatusAluno(aluno)}
-                        className={
-                          aluno.status === "BLOQUEADO"
-                            ? "text-orange-400 hover:text-orange-300"
-                            : "text-green-400 hover:text-green-300"
-                        }
-                      >
-                        {aluno.status}
-                      </button>
-                    </div>
+                        <button
+                          onClick={() => handleAlterarStatusAluno(aluno)}
+                          className={
+                            aluno.status === "BLOQUEADO"
+                              ? "text-orange-400 hover:text-orange-300"
+                              : "text-green-400 hover:text-green-300"
+                          }
+                        >
+                          {aluno.status}
+                        </button>
+                      </div>
+                    )}
                   </td>
                 </tr>
               ))}

@@ -27,10 +27,7 @@ public class PlanoService implements PlanoServicePort {
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
         return planoRepository
-                .findByEmpresa_IdAndStatusNot(
-                        empresa.getId(),
-                        EnumStatusPlano.EXCLUIDO
-                )
+                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
                 .stream()
                 .map(PlanoResponse::new)
                 .toList();

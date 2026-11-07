@@ -30,10 +30,7 @@ public class AlunoService implements AlunoServicePort {
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
         return alunoRepository
-                .findByEmpresa_IdAndStatusNot(
-                        empresa.getId(),
-                        EnumStatusAluno.EXCLUIDO
-                )
+                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
                 .stream()
                 .map(AlunoResponse::new)
                 .toList();

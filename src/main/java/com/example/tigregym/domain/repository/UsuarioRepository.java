@@ -27,6 +27,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     List<Usuario> findByEmpresa_IdAndStatusNot(Long empresaId, EnumStatusUsuario status);
 
+    List<Usuario> findByEmpresa_IdOrderByStatusAsc(Long empresaId);
+
     Optional<Usuario> findByIdAndEmpresa_IdAndStatusNot(
             Long id,
             Long empresaId,

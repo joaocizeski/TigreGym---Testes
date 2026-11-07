@@ -40,10 +40,7 @@ public class MatriculaService implements MatriculaServicePort {
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
 
         return matriculaRepository
-                .findByEmpresa_IdAndStatusNot(
-                        empresa.getId(),
-                        EnumStatusMatricula.EXCLUIDO
-                )
+                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
                 .stream()
                 .map(MatriculaResponse::new)
                 .toList();
@@ -63,10 +60,10 @@ public class MatriculaService implements MatriculaServicePort {
                 .orElse(null);
 
         Plano planoBanco = planoRepository
-                .findByIdAndEmpresa_IdAndStatusNot(
+                .findByIdAndEmpresa_IdAndStatus(
                         matricula.plano_id(),
                         empresa.getId(),
-                        EnumStatusPlano.EXCLUIDO
+                        EnumStatusPlano.ATIVO
                 )
                 .orElse(null);
 
