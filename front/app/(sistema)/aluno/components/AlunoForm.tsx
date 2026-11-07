@@ -34,7 +34,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
     valor: string
   ) => {
 
-    if (campo === "numero") {
+    if (campo === "numero" && valor !== "S/N") {
       valor = valor.replace(/\D/g, "");
     }
 
