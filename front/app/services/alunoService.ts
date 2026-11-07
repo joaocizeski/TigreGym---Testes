@@ -50,6 +50,14 @@ export async function consultaAlunoPorId(id:number):Promise<Aluno>{
 
     const valorAlunoBack = await api.get<Aluno>('/alunos/'+id);
 
+    if (!valorAlunoBack.data.numero) {
+        valorAlunoBack.data.numero = "S/N";
+    }
+
+    if (!valorAlunoBack.data.complemento) {
+        valorAlunoBack.data.complemento = "";
+    }
+
     return valorAlunoBack.data;
 }
 
