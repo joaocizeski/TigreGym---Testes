@@ -18,6 +18,6 @@ public class EnderecoController {
 
     @GetMapping("/{cep}")
     public ResponseEntity<EnderecoResponse> buscarEndereco(@PathVariable String cep) {
-        return new ResponseEntity.ok(buscarEndereco(cep));
+        return ResponseEntity.ok(enderecoService.BuscarEndereço(cep));
     }
 }
