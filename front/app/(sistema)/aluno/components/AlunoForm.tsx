@@ -10,10 +10,11 @@ import axios from "axios";
 
 export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
   const router = useRouter();
+  const [enderecoBuscado, setEnderecoBuscado] = useState<boolean>(!!alunoExistente?.cep);
 
   const [aluno, setAluno] = useState<Aluno>(
     alunoExistente ||
-      new Aluno(null, "", "", "", "", "", "", "", "", "", "", "ATIVO")
+      new Aluno(null, "", "", "", "", "", "", "", "", "", "", "", "ATIVO")
   );
 
   const handlerChange = (
@@ -25,11 +26,17 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
       | "email"
       | "cep"
       | "logradouro"
+      | "numero"
       | "bairro"
       | "cidade"
       | "uf",
     valor: string
   ) => {
+
+    if (campo === "cep") {
+      setEnderecoBuscado(false);
+    }
+
     setAluno(
       (valorAnterior) =>
         new Aluno(
@@ -41,6 +48,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
           campo === "email" ? valor : valorAnterior.email,
           campo === "cep" ? valor : valorAnterior.cep,
           campo === "logradouro" ? valor : valorAnterior.logradouro,
+          campo === "numero" ? valor : valorAnterior.numero,
           campo === "bairro" ? valor : valorAnterior.bairro,
           campo === "cidade" ? valor : valorAnterior.cidade,
           campo === "uf" ? valor : valorAnterior.uf,
@@ -69,12 +77,15 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             valorAnterior.email,
             endereco.cep || valorAnterior.cep,
             endereco.logradouro || "",
+            valorAnterior.numero,
             endereco.bairro || "",
             endereco.cidade || "",
             endereco.uf || "",
             valorAnterior.status
           )
       );
+
+      setEnderecoBuscado(true);
 
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.data) {
@@ -267,6 +278,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="logradouro"
               value={aluno.logradouro}
+              readOnly={enderecoBuscado}
               onChange={(e) => handlerChange("logradouro", e.target.value)}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
             />
@@ -280,6 +292,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="bairro"
               value={aluno.bairro}
+              readOnly={enderecoBuscado}
               onChange={(e) => handlerChange("bairro", e.target.value)}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
             />
@@ -293,6 +306,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="cidade"
               value={aluno.cidade}
+              readOnly={enderecoBuscado}
               onChange={(e) => handlerChange("cidade", e.target.value)}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
             />
@@ -306,8 +320,24 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="uf"
               value={aluno.uf}
+              readOnly={enderecoBuscado}
               onChange={(e) => handlerChange("uf", e.target.value)}
               maxLength={2}
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              Número:
+            </label>
+
+            <input
+              name="numero"
+              value={aluno.numero}
+              required
+              onChange={(e) => handlerChange("numero", e.target.value)}
+              placeholder="Digite o número"
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
             />
           </div>

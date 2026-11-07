@@ -8,6 +8,7 @@ export class Aluno {
     public email: string,
     public cep: string,
     public logradouro: string,
+    public numero: string,
     public bairro: string,
     public cidade: string,
     public uf: string,

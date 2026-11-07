@@ -10,6 +10,7 @@ public record AlunoRequest(
         String email,
         String cep,
         String logradouro,
+        String numero,
         String bairro,
         String cidade,
         String uf
