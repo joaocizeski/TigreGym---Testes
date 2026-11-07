@@ -52,6 +52,8 @@ public class Aluno {
 
     public String numero;
 
+    public String complemento;
+
     public String bairro;
 
     public String cidade;

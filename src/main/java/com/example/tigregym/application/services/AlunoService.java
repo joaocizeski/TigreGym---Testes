@@ -53,7 +53,16 @@ public class AlunoService implements AlunoServicePort {
             alunoBanco.setEmail(new Email(aluno.email()));
             alunoBanco.setCep(aluno.cep());
             alunoBanco.setLogradouro(aluno.logradouro());
-            alunoBanco.setNumero(aluno.numero());
+
+            if (aluno.numero() == null || aluno.numero().isBlank()) {
+                alunoBanco.setNumero("S/N");
+            } else if (aluno.numero().matches("\\d+")) {
+                alunoBanco.setNumero(aluno.numero());
+            } else {
+                throw new IllegalArgumentException("Número deve conter apenas números!");
+            }
+
+            alunoBanco.setComplemento(aluno.complemento());
             alunoBanco.setBairro(aluno.bairro());
             alunoBanco.setCidade(aluno.cidade());
             alunoBanco.setUf(aluno.uf());
@@ -79,7 +88,16 @@ public class AlunoService implements AlunoServicePort {
             alunoBanco.setEmail(new Email(aluno.email()));
             alunoBanco.setCep(aluno.cep());
             alunoBanco.setLogradouro(aluno.logradouro());
-            alunoBanco.setNumero(aluno.numero());
+
+            if (aluno.numero() == null || aluno.numero().isBlank()) {
+                alunoBanco.setNumero("S/N");
+            } else if (aluno.numero().matches("\\d+")) {
+                alunoBanco.setNumero(aluno.numero());
+            } else {
+                throw new IllegalArgumentException("Número deve conter apenas números!");
+            }
+
+            alunoBanco.setComplemento(aluno.complemento());
             alunoBanco.setBairro(aluno.bairro());
             alunoBanco.setCidade(aluno.cidade());
             alunoBanco.setUf(aluno.uf());

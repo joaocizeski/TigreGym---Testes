@@ -14,7 +14,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
 
   const [aluno, setAluno] = useState<Aluno>(
     alunoExistente ||
-      new Aluno(null, "", "", "", "", "", "", "", "", "", "", "", "ATIVO")
+      new Aluno(null, "", "", "", "", "", "", "", "S/N", "", "", "", "", "", "ATIVO")
   );
 
   const handlerChange = (
@@ -27,11 +27,16 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
       | "cep"
       | "logradouro"
       | "numero"
+      | "complemento"
       | "bairro"
       | "cidade"
       | "uf",
     valor: string
   ) => {
+
+    if (campo === "numero") {
+      valor = valor.replace(/\D/g, "");
+    }
 
     if (campo === "cep") {
       setEnderecoBuscado(false);
@@ -49,6 +54,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
           campo === "cep" ? valor : valorAnterior.cep,
           campo === "logradouro" ? valor : valorAnterior.logradouro,
           campo === "numero" ? valor : valorAnterior.numero,
+          campo === "complemento" ? valor : valorAnterior.complemento,
           campo === "bairro" ? valor : valorAnterior.bairro,
           campo === "cidade" ? valor : valorAnterior.cidade,
           campo === "uf" ? valor : valorAnterior.uf,
@@ -78,6 +84,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             endereco.cep || valorAnterior.cep,
             endereco.logradouro || "",
             valorAnterior.numero,
+            valorAnterior.complemento,
             endereco.bairro || "",
             endereco.cidade || "",
             endereco.uf || "",
@@ -306,9 +313,8 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="cidade"
               value={aluno.cidade}
-              readOnly={enderecoBuscado}
-              onChange={(e) => handlerChange("cidade", e.target.value)}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+              readOnly
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-zinc-500 outline-none cursor-not-allowed"
             />
           </div>
 
@@ -320,10 +326,9 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="uf"
               value={aluno.uf}
-              readOnly={enderecoBuscado}
-              onChange={(e) => handlerChange("uf", e.target.value)}
+              readOnly
               maxLength={2}
-              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+              className="w-full bg-zinc-800 border border-zinc-700 rounded-lg px-4 py-3 text-zinc-500 outline-none cursor-not-allowed"
             />
           </div>
 
@@ -335,9 +340,34 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
             <input
               name="numero"
               value={aluno.numero}
-              required
+              inputMode="numeric"
+              pattern="[0-9]*"
+              onFocus={() => {
+                if (aluno.numero === "S/N") {
+                  handlerChange("numero", "");
+                }
+              }}
+              onBlur={() => {
+                if (!aluno.numero.trim()) {
+                  handlerChange("numero", "S/N");
+                }
+              }}
               onChange={(e) => handlerChange("numero", e.target.value)}
-              placeholder="Digite o número"
+              placeholder="S/N"
+              className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-semibold text-zinc-300 mb-2">
+              Complemento:
+            </label>
+
+            <input
+              name="complemento"
+              value={aluno.complemento}
+              onChange={(e) => handlerChange("complemento", e.target.value)}
+              placeholder="Apartamento, bloco, sala..."
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3 text-white outline-none focus:border-yellow-400 transition"
             />
           </div>
