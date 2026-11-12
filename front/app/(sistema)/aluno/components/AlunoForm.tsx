@@ -14,7 +14,7 @@ export default function AlunoForm({ alunoExistente }: AlunoFormProps) {
 
   const [aluno, setAluno] = useState<Aluno>(
     alunoExistente ||
-      new Aluno(null, "", "", "", "", "", "", "", "S/N", "", "", "", "", "", "ATIVO")
+      new Aluno(null, "", "", "", "", "", "", "", "S/N", "", "", "", "", "ATIVO")
   );
 
   const handlerChange = (
