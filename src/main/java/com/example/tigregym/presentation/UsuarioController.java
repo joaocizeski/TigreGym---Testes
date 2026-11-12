@@ -5,7 +5,7 @@ import com.example.tigregym.application.DTOs.CriarAdminRequest;
 import com.example.tigregym.application.DTOs.CriarAdminResponse;
 import com.example.tigregym.application.DTOs.UsuarioRequest;
 import com.example.tigregym.application.DTOs.UsuarioResponse;
-import com.example.tigregym.application.ports.UsuarioServicePort;
+import com.example.tigregym.application.services.UsuarioService;
 import com.example.tigregym.domain.entities.EnumStatusUsuario;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +23,7 @@ import java.util.List;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioServicePort usuarioService;
+    private UsuarioService usuarioService;
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de usuários!",

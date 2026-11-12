@@ -3,7 +3,7 @@ package com.example.tigregym.presentation;
 import com.example.tigregym.application.DTOs.AtualizarStatusPlanoRequest;
 import com.example.tigregym.application.DTOs.PlanoRequest;
 import com.example.tigregym.application.DTOs.PlanoResponse;
-import com.example.tigregym.application.ports.PlanoServicePort;
+import com.example.tigregym.application.services.PlanoService;
 import com.example.tigregym.domain.entities.EnumStatusPlano;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +21,7 @@ import java.util.List;
 public class PlanoController {
 
     @Autowired
-    private PlanoServicePort planoService;
+    private PlanoService planoService;
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de planos!",

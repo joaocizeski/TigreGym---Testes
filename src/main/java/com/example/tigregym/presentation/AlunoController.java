@@ -3,7 +3,7 @@ package com.example.tigregym.presentation;
 import com.example.tigregym.application.DTOs.AlunoRequest;
 import com.example.tigregym.application.DTOs.AlunoResponse;
 import com.example.tigregym.application.DTOs.AtualizarStatusAlunoRequest;
-import com.example.tigregym.application.ports.AlunoServicePort;
+import com.example.tigregym.application.services.AlunoService;
 import com.example.tigregym.domain.entities.EnumStatusAluno;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +21,7 @@ import java.util.List;
 public class AlunoController {
 
     @Autowired
-    private AlunoServicePort alunoService;
+    private AlunoService alunoService;
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de alunos!",

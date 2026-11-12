@@ -2,7 +2,6 @@ package com.example.tigregym.application.services;
 
 import com.example.tigregym.application.DTOs.MatriculaRequest;
 import com.example.tigregym.application.DTOs.MatriculaResponse;
-import com.example.tigregym.application.ports.MatriculaServicePort;
 import com.example.tigregym.domain.entities.Aluno;
 import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusAluno;
@@ -20,7 +19,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class MatriculaService implements MatriculaServicePort {
+public class MatriculaService {
 
     @Autowired
     private MatriculaRepository matriculaRepository;
@@ -34,7 +33,6 @@ public class MatriculaService implements MatriculaServicePort {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Override
     public List<MatriculaResponse> listarTodosMatriculaTable() {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -46,7 +44,6 @@ public class MatriculaService implements MatriculaServicePort {
                 .toList();
     }
 
-    @Override
     public MatriculaResponse salvarMatricula(MatriculaRequest matricula, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -121,7 +118,6 @@ public class MatriculaService implements MatriculaServicePort {
         return null;
     }
 
-    @Override
     public MatriculaResponse buscarPorId(Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -141,7 +137,6 @@ public class MatriculaService implements MatriculaServicePort {
         return new MatriculaResponse(matricula);
     }
 
-    @Override
     public boolean atualizarStatus(EnumStatusMatricula status, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();

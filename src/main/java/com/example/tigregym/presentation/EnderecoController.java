@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/enderecos")
+@RequestMapping("/endereco")
 public class EnderecoController {
 
     @Autowired
@@ -18,6 +18,6 @@ public class EnderecoController {
 
     @GetMapping("/{cep}")
     public ResponseEntity<EnderecoResponse> buscarEndereco(@PathVariable String cep) {
-        return ResponseEntity.ok(enderecoService.BuscarEndereço(cep));
+        return ResponseEntity.ok(enderecoService.BuscarEndereco(cep));
     }
 }

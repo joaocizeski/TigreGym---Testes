@@ -1,7 +1,7 @@
 package com.example.tigregym.presentation;
 
 import com.example.tigregym.application.DTOs.LoginRequest;
-import com.example.tigregym.application.ports.UsuarioServicePort;
+import com.example.tigregym.application.services.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
     @Autowired
-    private UsuarioServicePort usuarioService;
+    private UsuarioService usuarioService;
 
     @PostMapping("/login")
     @Operation(description = "Método de login", summary = "Autenticação de usuário")

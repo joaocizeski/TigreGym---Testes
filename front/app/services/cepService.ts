@@ -11,7 +11,7 @@ export interface EnderecoResponse {
 export async function buscarCep(cep: string): Promise<EnderecoResponse> {
 
   const resposta = await api.get<EnderecoResponse>(
-    '/api/enderecos/' + cep
+    '/endereco/' + cep
   );
 
   return resposta.data;

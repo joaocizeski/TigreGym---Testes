@@ -1,7 +1,8 @@
 package com.example.tigregym.infra.external;
 
-import com.example.tigregym.domain.interfaces.IVIaCepExternalRepository;
+import com.example.tigregym.domain.interfaces.IViaCepExternalRepository;
 import com.example.tigregym.infra.dto.ViaCepResponse;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
@@ -12,13 +13,14 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 @Component
-public class ViaCepExternalRepository implements IVIaCepExternalRepository {
+public class ViaCepExternalRepository implements IViaCepExternalRepository {
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10)).build();
 
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Async
     public ViaCepResponse buscarEnderecoViaCepPorCep(String cep) {
         var url = "https://viacep.com.br/ws/" + cep.replaceAll("[^0-9]", "") + "/json/";
         try {

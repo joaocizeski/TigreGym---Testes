@@ -3,7 +3,7 @@ package com.example.tigregym.presentation;
 import com.example.tigregym.application.DTOs.AtualizarStatusMatriculaRequest;
 import com.example.tigregym.application.DTOs.MatriculaRequest;
 import com.example.tigregym.application.DTOs.MatriculaResponse;
-import com.example.tigregym.application.ports.MatriculaServicePort;
+import com.example.tigregym.application.services.MatriculaService;
 import com.example.tigregym.domain.entities.EnumStatusMatricula;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -21,7 +21,7 @@ import java.util.List;
 public class MatriculaController {
 
     @Autowired
-    private MatriculaServicePort matriculaService;
+    private MatriculaService matriculaService;
 
     @GetMapping
     @Operation(summary = "Método de consulta da lista de matrículas!",

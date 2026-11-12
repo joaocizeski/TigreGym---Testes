@@ -1,7 +1,7 @@
 package com.example.tigregym.application.services;
 
 import com.example.tigregym.application.DTOs.EnderecoResponse;
-import com.example.tigregym.domain.interfaces.IVIaCepExternalRepository;
+import com.example.tigregym.domain.interfaces.IViaCepExternalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 public class EnderecoService {
 
     @Autowired
-    private IVIaCepExternalRepository vIaCepExternalRepository;
+    private IViaCepExternalRepository viaCepExternalRepository;
 
-   public EnderecoResponse BuscarEndereço(String cep){
+   public EnderecoResponse BuscarEndereco(String cep){
 
-        var enderecoCompleto = vIaCepExternalRepository.buscarEnderecoViaCepPorCep(cep);
+        var enderecoCompleto = viaCepExternalRepository.buscarEnderecoViaCepPorCep(cep);
 
         return new EnderecoResponse( enderecoCompleto.getCep(),
                 enderecoCompleto.getLogradouro(),

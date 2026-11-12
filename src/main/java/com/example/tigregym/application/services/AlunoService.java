@@ -2,7 +2,6 @@ package com.example.tigregym.application.services;
 
 import com.example.tigregym.application.DTOs.AlunoRequest;
 import com.example.tigregym.application.DTOs.AlunoResponse;
-import com.example.tigregym.application.ports.AlunoServicePort;
 import com.example.tigregym.domain.entities.Aluno;
 import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusAluno;
@@ -16,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class AlunoService implements AlunoServicePort {
+public class AlunoService {
 
     @Autowired
     private AlunoRepository alunoRepository;
@@ -24,7 +23,6 @@ public class AlunoService implements AlunoServicePort {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Override
     public List<AlunoResponse> listarTodosAlunoTable() {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -36,7 +34,6 @@ public class AlunoService implements AlunoServicePort {
                 .toList();
     }
 
-    @Override
     public AlunoResponse salvarAluno(AlunoRequest aluno, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -106,7 +103,6 @@ public class AlunoService implements AlunoServicePort {
         return null;
     }
 
-    @Override
     public AlunoResponse buscarPorId(Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -126,7 +122,6 @@ public class AlunoService implements AlunoServicePort {
         return new AlunoResponse(aluno);
     }
 
-    @Override
     public boolean atualizarStatus(EnumStatusAluno status, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();

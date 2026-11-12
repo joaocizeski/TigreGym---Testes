@@ -25,4 +25,13 @@ public class Empresa {
 
     @OneToMany(mappedBy = "empresa")
     private List<Usuario> usuarios;
+
+    @OneToMany(mappedBy = "empresa")
+    private List<Aluno> alunos;
+
+    @OneToMany(mappedBy = "empresa")
+    private List<Plano> planos;
+
+    @OneToMany(mappedBy = "empresa")
+    private List<Matricula> matriculas;
 }

@@ -7,7 +7,6 @@ import com.example.tigregym.application.DTOs.LoginResponse;
 import com.example.tigregym.application.DTOs.UsuarioLogado;
 import com.example.tigregym.application.DTOs.UsuarioRequest;
 import com.example.tigregym.application.DTOs.UsuarioResponse;
-import com.example.tigregym.application.ports.UsuarioServicePort;
 import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusUsuario;
 import com.example.tigregym.domain.entities.Usuario;
@@ -23,7 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UsuarioService implements UsuarioServicePort {
+public class UsuarioService {
 
     @Value("${spring.secret}")
     private String secret;
@@ -37,7 +36,6 @@ public class UsuarioService implements UsuarioServicePort {
     @Autowired
     private TokenService tokenService;
 
-    @Override
     public LoginResponse validarUsuarioAutenticadoRetornaToken(LoginRequest request) {
 
         Email email = new Email(request.email());
@@ -55,7 +53,6 @@ public class UsuarioService implements UsuarioServicePort {
         return null;
     }
 
-    @Override
     public List<UsuarioResponse> listarTodosUsuariosTable() {
 
         Empresa empresa = getEmpresaUsuarioLogado();
@@ -67,7 +64,6 @@ public class UsuarioService implements UsuarioServicePort {
                 .toList();
     }
 
-    @Override
     public CriarAdminResponse criarAdmin(CriarAdminRequest criarAdminRequest) {
 
         if (!criarAdminRequest.secretKey().equals(secret)) {
@@ -110,7 +106,6 @@ public class UsuarioService implements UsuarioServicePort {
                         new IllegalStateException("Empresa do usuário não encontrada!"));
     }
 
-    @Override
     public UsuarioResponse salvarUsuario(UsuarioRequest usuario, Long id) {
 
         Empresa empresa = getEmpresaUsuarioLogado();
@@ -143,7 +138,6 @@ public class UsuarioService implements UsuarioServicePort {
         return null;
     }
 
-    @Override
     public UsuarioResponse buscarPorId(Long id) {
 
         Empresa empresa = getEmpresaUsuarioLogado();
@@ -163,7 +157,6 @@ public class UsuarioService implements UsuarioServicePort {
         return new UsuarioResponse(usuario);
     }
 
-    @Override
     public boolean atualizarStatus(EnumStatusUsuario status, Long id) {
 
         Empresa empresa = getEmpresaUsuarioLogado();
@@ -185,7 +178,6 @@ public class UsuarioService implements UsuarioServicePort {
         return false;
     }
 
-    @Override
     public UsuarioResponse BuscarUsuariologado() {
 
         try {

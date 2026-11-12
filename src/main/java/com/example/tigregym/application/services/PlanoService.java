@@ -2,7 +2,6 @@ package com.example.tigregym.application.services;
 
 import com.example.tigregym.application.DTOs.PlanoRequest;
 import com.example.tigregym.application.DTOs.PlanoResponse;
-import com.example.tigregym.application.ports.PlanoServicePort;
 import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusPlano;
 import com.example.tigregym.domain.entities.Plano;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PlanoService implements PlanoServicePort {
+public class PlanoService {
 
     @Autowired
     private PlanoRepository planoRepository;
@@ -21,7 +20,6 @@ public class PlanoService implements PlanoServicePort {
     @Autowired
     private UsuarioService usuarioService;
 
-    @Override
     public List<PlanoResponse> listarTodosPlanoTable() {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -33,7 +31,6 @@ public class PlanoService implements PlanoServicePort {
                 .toList();
     }
 
-    @Override
     public PlanoResponse salvarPlano(PlanoRequest plano, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -71,7 +68,6 @@ public class PlanoService implements PlanoServicePort {
         return null;
     }
 
-    @Override
     public PlanoResponse buscarPorId(Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
@@ -91,7 +87,6 @@ public class PlanoService implements PlanoServicePort {
         return new PlanoResponse(plano);
     }
 
-    @Override
     public boolean atualizarStatus(EnumStatusPlano status, Long id) {
 
         Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
