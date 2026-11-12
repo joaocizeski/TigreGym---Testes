@@ -3,9 +3,9 @@ package com.example.tigregym.application.services;
 import com.example.tigregym.application.DTOs.AlunoRequest;
 import com.example.tigregym.application.DTOs.AlunoResponse;
 import com.example.tigregym.domain.entities.Aluno;
-import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusAluno;
 import com.example.tigregym.domain.repository.AlunoRepository;
+import com.example.tigregym.domain.repository.EmpresaRepository;
 import com.example.tigregym.domain.valueobject.CPF;
 import com.example.tigregym.domain.valueobject.Email;
 import com.example.tigregym.domain.valueobject.Telefone;
@@ -23,12 +23,15 @@ public class AlunoService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private EmpresaRepository empresaRepository;
+
     public List<AlunoResponse> listarTodosAlunoTable() {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
         return alunoRepository
-                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
+                .findByEmpresa_IdOrderByStatusAsc(usuarioLogado.empresa_id())
                 .stream()
                 .map(AlunoResponse::new)
                 .toList();
@@ -36,7 +39,15 @@ public class AlunoService {
 
     public AlunoResponse salvarAluno(AlunoRequest aluno, Long id) {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        var empresaLogada = empresaRepository
+                .findById(usuarioLogado.empresa_id())
+                .orElse(null);
+
+        if (empresaLogada == null) {
+            throw new IllegalStateException("Empresa do usuário não encontrada!");
+        }
 
         if (id == 0L) {
             Aluno alunoBanco = new Aluno();
@@ -60,7 +71,7 @@ public class AlunoService {
             alunoBanco.setBairro(aluno.bairro());
             alunoBanco.setCidade(aluno.cidade());
             alunoBanco.setUf(aluno.uf());
-            alunoBanco.setEmpresa(empresa);
+            alunoBanco.setEmpresa(empresaLogada);
 
             alunoRepository.save(alunoBanco);
             return new AlunoResponse(alunoBanco);
@@ -69,7 +80,7 @@ public class AlunoService {
         Aluno alunoBanco = alunoRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusAluno.EXCLUIDO
                 )
                 .orElse(null);
@@ -105,12 +116,12 @@ public class AlunoService {
 
     public AlunoResponse buscarPorId(Long id) {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
         Aluno aluno = alunoRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusAluno.EXCLUIDO
                 )
                 .orElse(null);
@@ -124,12 +135,12 @@ public class AlunoService {
 
     public boolean atualizarStatus(EnumStatusAluno status, Long id) {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
         Aluno alunoBanco = alunoRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusAluno.EXCLUIDO
                 )
                 .orElse(null);

@@ -3,13 +3,13 @@ package com.example.tigregym.application.services;
 import com.example.tigregym.application.DTOs.MatriculaRequest;
 import com.example.tigregym.application.DTOs.MatriculaResponse;
 import com.example.tigregym.domain.entities.Aluno;
-import com.example.tigregym.domain.entities.Empresa;
 import com.example.tigregym.domain.entities.EnumStatusAluno;
 import com.example.tigregym.domain.entities.EnumStatusMatricula;
 import com.example.tigregym.domain.entities.EnumStatusPlano;
 import com.example.tigregym.domain.entities.Matricula;
 import com.example.tigregym.domain.entities.Plano;
 import com.example.tigregym.domain.repository.AlunoRepository;
+import com.example.tigregym.domain.repository.EmpresaRepository;
 import com.example.tigregym.domain.repository.MatriculaRepository;
 import com.example.tigregym.domain.repository.PlanoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,12 +33,15 @@ public class MatriculaService {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private EmpresaRepository empresaRepository;
+
     public List<MatriculaResponse> listarTodosMatriculaTable() {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
         return matriculaRepository
-                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
+                .findByEmpresa_IdOrderByStatusAsc(usuarioLogado.empresa_id())
                 .stream()
                 .map(MatriculaResponse::new)
                 .toList();
@@ -46,12 +49,20 @@ public class MatriculaService {
 
     public MatriculaResponse salvarMatricula(MatriculaRequest matricula, Long id) {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
+
+        var empresaLogada = empresaRepository
+                .findById(usuarioLogado.empresa_id())
+                .orElse(null);
+
+        if (empresaLogada == null) {
+            throw new IllegalStateException("Empresa do usuário não encontrada!");
+        }
 
         Aluno alunoBanco = alunoRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         matricula.aluno_id(),
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusAluno.EXCLUIDO
                 )
                 .orElse(null);
@@ -59,7 +70,7 @@ public class MatriculaService {
         Plano planoBanco = planoRepository
                 .findByIdAndEmpresa_IdAndStatus(
                         matricula.plano_id(),
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusPlano.ATIVO
                 )
                 .orElse(null);
@@ -76,7 +87,7 @@ public class MatriculaService {
             Matricula matriculaBanco = new Matricula();
             matriculaBanco.setAluno(alunoBanco);
             matriculaBanco.setPlano(planoBanco);
-            matriculaBanco.setEmpresa(empresa);
+            matriculaBanco.setEmpresa(empresaLogada);
 
             LocalDateTime dataInicio = LocalDateTime.now();
             matriculaBanco.setDataInicio(dataInicio);
@@ -91,7 +102,7 @@ public class MatriculaService {
         Matricula matriculaBanco = matriculaRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusMatricula.EXCLUIDO
                 )
                 .orElse(null);
@@ -120,12 +131,12 @@ public class MatriculaService {
 
     public MatriculaResponse buscarPorId(Long id) {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
         Matricula matricula = matriculaRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusMatricula.EXCLUIDO
                 )
                 .orElse(null);
@@ -139,12 +150,12 @@ public class MatriculaService {
 
     public boolean atualizarStatus(EnumStatusMatricula status, Long id) {
 
-        Empresa empresa = usuarioService.getEmpresaUsuarioLogado();
+        var usuarioLogado = usuarioService.getUsuarioLogado();
 
         Matricula matriculaBanco = matriculaRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusMatricula.EXCLUIDO
                 )
                 .orElse(null);

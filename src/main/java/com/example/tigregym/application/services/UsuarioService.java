@@ -55,10 +55,10 @@ public class UsuarioService {
 
     public List<UsuarioResponse> listarTodosUsuariosTable() {
 
-        Empresa empresa = getEmpresaUsuarioLogado();
+        var usuarioLogado = getUsuarioLogado();
 
         return usuarioRepository
-                .findByEmpresa_IdOrderByStatusAsc(empresa.getId())
+                .findByEmpresa_IdOrderByStatusAsc(usuarioLogado.empresa_id())
                 .stream()
                 .map(UsuarioResponse::new)
                 .toList();
@@ -87,32 +87,24 @@ public class UsuarioService {
     }
 
     public UsuarioLogado getUsuarioLogado() {
-        return (UsuarioLogado) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
-    }
-
-    public Empresa getEmpresaUsuarioLogado() {
-
-        var usuarioLogado = getUsuarioLogado();
-
-        if (usuarioLogado.empresa_id() == null) {
-            throw new IllegalStateException("Usuário não possui empresa vinculada!");
-        }
-
-        return empresaRepository.findById(usuarioLogado.empresa_id())
-                .orElseThrow(() ->
-                        new IllegalStateException("Empresa do usuário não encontrada!"));
+        return (UsuarioLogado) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     public UsuarioResponse salvarUsuario(UsuarioRequest usuario, Long id) {
 
-        Empresa empresa = getEmpresaUsuarioLogado();
+        var usuarioLogado = getUsuarioLogado();
+
+        var empresaLogada = empresaRepository
+                .findById(usuarioLogado.empresa_id())
+                .orElse(null);
+
+        if (empresaLogada == null) {
+            throw new IllegalStateException("Empresa do usuário não encontrada!");
+        }
 
         if (id == 0L) {
             Usuario usuarioBanco = new Usuario(usuario);
-            usuarioBanco.setEmpresa(empresa);
+            usuarioBanco.setEmpresa(empresaLogada);
             usuarioRepository.save(usuarioBanco);
             return new UsuarioResponse(usuarioBanco);
         }
@@ -120,7 +112,7 @@ public class UsuarioService {
         Usuario usuarioBanco = usuarioRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusUsuario.EXCLUIDO
                 )
                 .orElse(null);
@@ -140,12 +132,12 @@ public class UsuarioService {
 
     public UsuarioResponse buscarPorId(Long id) {
 
-        Empresa empresa = getEmpresaUsuarioLogado();
+        var usuarioLogado = getUsuarioLogado();
 
         Usuario usuario = usuarioRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusUsuario.EXCLUIDO
                 )
                 .orElse(null);
@@ -159,12 +151,12 @@ public class UsuarioService {
 
     public boolean atualizarStatus(EnumStatusUsuario status, Long id) {
 
-        Empresa empresa = getEmpresaUsuarioLogado();
+        var usuarioLogado = getUsuarioLogado();
 
         Usuario usuarioBanco = usuarioRepository
                 .findByIdAndEmpresa_IdAndStatusNot(
                         id,
-                        empresa.getId(),
+                        usuarioLogado.empresa_id(),
                         EnumStatusUsuario.EXCLUIDO
                 )
                 .orElse(null);
@@ -182,12 +174,11 @@ public class UsuarioService {
 
         try {
             var usuarioLogado = getUsuarioLogado();
-            Empresa empresa = getEmpresaUsuarioLogado();
 
             return usuarioRepository
                     .findByIdAndEmpresa_IdAndStatusNot(
                             usuarioLogado.id(),
-                            empresa.getId(),
+                            usuarioLogado.empresa_id(),
                             EnumStatusUsuario.EXCLUIDO
                     )
                     .stream()
